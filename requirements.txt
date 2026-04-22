@@ -1,0 +1,10 @@
+opencv-python
+mediapipe
+torch
+torchvision
+scikit-learn
+numpy
+flask
+flask-socketio
+cryptography
+pandas

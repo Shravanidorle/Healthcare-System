@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FallGuard — Hospital Safety System</title>
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- Stylesheets (order matters) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+
+    <!-- Third-party libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" defer></script>
+</head>
+
+<body>
+
+    <!-- ════════════════════════════════════════
+     TOAST CONTAINER
+════════════════════════════════════════ -->
+    <div id="toast-container"></div>
+
+
+    <!-- ════════════════════════════════════════
+     FULLSCREEN MODAL
+════════════════════════════════════════ -->
+    <div id="fs-modal">
+        <div class="fs-bar">
+            <div class="fs-lbl" id="fs-lbl">CAMERA FEED</div>
+            <button class="fs-close" onclick="closeFS()">✕ &nbsp;CLOSE &nbsp;[ESC]</button>
+        </div>
+        <img id="fs-img" src="" alt="Fullscreen Feed">
+    </div>
+
+
+    <!-- ════════════════════════════════════════
+     DRAWER OVERLAY
+════════════════════════════════════════ -->
+    <div class="drw-overlay" id="drw-overlay" onclick="closeDrawer()"></div>
+
+
+    <!-- ════════════════════════════════════════
+     SIDE DRAWER
+════════════════════════════════════════ -->
+    <aside class="drawer" id="drawer">
+        <div class="drw-hd">
+            <h2>Menu</h2>
+            <button class="drw-x" onclick="closeDrawer()">✕</button>
+        </div>
+
+        <div class="drw-scroll">
+
+            <!-- Navigation -->
+            <div class="drw-sec">
+                <div class="drw-sec-title">Navigation</div>
+                <div class="nav-item active" onclick="closeDrawer()">
+                    <span class="nav-icon">📡</span> Live Dashboard
+                </div>
+                <div class="nav-item" onclick="goAlerts()">
+                    <span class="nav-icon">📋</span> Alert History
+                    <span class="nav-badge" id="drw-badge">0</span>
+                </div>
+                <div class="nav-item" onclick="goSettings()">
+                    <span class="nav-icon">⚙️</span> Settings
+                </div>
+                <div class="nav-item" onclick="window.open('/status','_blank'); closeDrawer()">
+                    <span class="nav-icon">🔎</span> System Status
+                </div>
+            </div>
+
+            <!-- Export -->
+            <div class="drw-sec">
+                <div class="drw-sec-title">Export Report</div>
+                <button class="exp-btn" onclick="exportPDF()">📄 &nbsp;Download PDF Report</button>
+                <button class="exp-btn csv" onclick="exportCSV()">📊 &nbsp;Download CSV Log</button>
+            </div>
+
+            <!-- Settings -->
+            <div class="drw-sec" id="settings-sec">
+                <div class="drw-sec-title">Settings</div>
+
+                <div class="srow">
+                    <div>
+                        <div class="slbl">Sound Alerts</div>
+                        <div class="ssub">Beep on fall detection</div>
+                    </div>
+                    <div class="toggle on" id="tgl-sound" onclick="toggleSetting(this)"></div>
+                </div>
+                <div class="srow">
+                    <div>
+                        <div class="slbl">Privacy Mode</div>
+                        <div class="ssub">Blur camera feed</div>
+                    </div>
+                    <div class="toggle" id="tgl-privacy" onclick="togglePrivacy(this)"></div>
+                </div>
+                <div class="srow">
+                    <div>
+                        <div class="slbl">Auto-dismiss Alerts</div>
+                        <div class="ssub">Hide banner after 4s</div>
+                    </div>
+                    <div class="toggle on" id="tgl-auto" onclick="toggleSetting(this)"></div>
+                </div>
+                <div class="srow" style="flex-direction:column; align-items:flex-start">
+                    <div class="slbl" style="margin-bottom:4px">Confidence Threshold</div>
+                    <div class="thr-ctrl" style="width:100%">
+                        <input type="range" min="50" max="99" value="85" id="thr-slider"
+                            oninput="document.getElementById('thr-val').textContent = this.value + '%'">
+                        <span class="thr-val" id="thr-val">85%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monitored Rooms (populated by rooms.js) -->
+            <div class="drw-sec">
+                <div class="drw-sec-title">Monitored Rooms</div>
+                <div id="drw-rooms"></div>
+            </div>
+
+            <!-- Recent Alerts (populated by socket.js) -->
+            <div class="drw-sec">
+                <div class="drw-sec-title">Recent Alerts</div>
+                <div class="hist-list" id="drw-hist">
+                    <div class="hist-empty" id="drw-no-alerts">No alerts recorded</div>
+                </div>
+            </div>
+
+        </div><!-- /drw-scroll -->
+
+        <div class="drw-foot">
+            <div class="ver-tag">FALLGUARD <span>v2.2</span> · CNN+LSTM · MediaPipe</div>
+        </div>
+    </aside>
+
+
+    <!-- ════════════════════════════════════════
+     HEADER
+════════════════════════════════════════ -->
+    <header>
+        <div class="header-left">
+
+            <div class="hamburger" id="hamburger" onclick="toggleDrawer()">
+                <span></span><span></span><span></span>
+            </div>
+
+            <div class="logo-area">
+                <div class="logo-icon">🏥</div>
+                <div class="logo-text">FALL<span>GUARD</span></div>
+            </div>
+
+            <!-- Room Selector (dropdown populated by rooms.js) -->
+            <div class="room-sel" id="room-sel-btn" onclick="toggleRoomDD()">
+                <span class="room-sel-lbl">ROOM&nbsp;·&nbsp;</span>
+                <span class="room-sel-val" id="cur-room">101</span>
+                <span class="room-caret">▾</span>
+                <div class="room-dd" id="room-dd"></div>
+            </div>
+
+        </div>
+        <div class="header-right">
+            <div class="live-pill">
+                <div class="live-dot" id="live-dot"></div>
+                <span id="live-txt">CONNECTING</span>
+            </div>
+            <div class="header-time" id="clock">--:--:--</div>
+        </div>
+    </header>
+
+
+    <!-- ════════════════════════════════════════
+     MAIN CONTENT
+════════════════════════════════════════ -->
+    <div class="main">
+
+        <!-- ── Left: Video Panel ── -->
+        <div class="video-panel">
+
+            <!-- Fall Alert Banner -->
+            <div id="alert-banner">
+                ⚠️ &nbsp;FALL DETECTED — ALERT SURVEILLANCE
+                <div id="alert-conf"></div>
+            </div>
+
+            <!-- Feed Grid -->
+            <div class="feed-grid">
+
+                <!-- Camera Feed -->
+                <div class="feed-box">
+                    <div class="feed-lbl">
+                        <span class="dot"></span>
+                        Camera Feed
+                        <button class="fsb" onclick="openFS('cam')">⛶ Fullscreen</button>
+                    </div>
+                    <div class="vwrap" onclick="openFS('cam')">
+                        <img id="video-feed" src="{{ url_for('video_feed') }}" alt="Camera Feed"
+                            onerror="showOff('co1')">
+                        <div class="cam-off" id="co1">
+                            <div style="font-size:2em">📷</div>
+                            <div>Camera unavailable</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skeleton Feed -->
+                <div class="feed-box">
+                    <div class="feed-lbl">
+                        <span class="dot b"></span>
+                        Skeletal View — Privacy
+                        <button class="fsb" onclick="openFS('skel')"
+                            style="border-color:rgba(61,184,255,0.3); color:var(--blue)">
+                            ⛶ Fullscreen
+                        </button>
+                    </div>
+                    <div class="vwrap priv" onclick="openFS('skel')">
+                        <img id="skel-feed" src="{{ url_for('skeleton_feed') }}" alt="Skeleton Feed"
+                            onerror="showOff('co2')">
+                        <div class="cam-off" id="co2">
+                            <div style="font-size:2em">🦴</div>
+                            <div>Skeleton unavailable</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /feed-grid -->
+
+            <!-- Sparkline Chart -->
+            <div class="spark-card">
+                <div class="spark-hd">
+                    <span class="spark-title">Confidence Trend — Live 60s Window</span>
+                    <span class="spark-val" id="spark-live">0.0%</span>
+                </div>
+                <div class="spark-wrap">
+                    <canvas id="spark-canvas"></canvas>
+                </div>
+            </div>
+
+        </div><!-- /video-panel -->
+
+
+        <!-- ── Right: Sidebar ── -->
+        <div class="sidebar">
+
+            <!-- Session Stats -->
+            <div class="card">
+                <div class="card-title">Session Stats</div>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="val r" id="fall-ct">0</div>
+                        <div class="lbl">Falls Detected</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="val b" id="sess-time">00:00</div>
+                        <div class="lbl">Session Time</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="val a" id="last-conf">—</div>
+                        <div class="lbl">Last Confidence</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="val g" id="alert-ct">0</div>
+                        <div class="lbl">Alerts Sent</div>
+                    </div>
+                </div>
+                <div class="cbar-wrap">
+                    <div class="cbar-lbl"><span>Live Confidence</span><span id="conf-pct">0%</span></div>
+                    <div class="cbar-track">
+                        <div class="cbar-fill" id="cbar"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Health -->
+            <div class="card">
+                <div class="card-title">System Health</div>
+                <div class="srow2"><span>ML Model</span> <span class="sbadge ok" id="mdl-st">LOADED</span></div>
+                <div class="srow2"><span>Scaler</span> <span class="sbadge ok" id="scl-st">LOADED</span></div>
+                <div class="srow2"><span>Camera Stream</span><span class="sbadge ok" id="cam-st">ACTIVE</span></div>
+                <div class="srow2"><span>Socket</span> <span class="sbadge err" id="sock-st">OFFLINE</span></div>
+            </div>
+
+            <!-- Alert Log -->
+            <div class="card" id="alert-log-card">
+                <div class="card-title">Alert Log</div>
+                <ul id="alert-log">
+                    <li id="no-alerts-msg">No alerts yet</li>
+                </ul>
+            </div>
+
+            <!-- System Info -->
+            <div class="card sys-info">
+                <div class="card-title">System Info</div>
+                <p>
+                    Collects <code>30 frames</code> into a sliding window, extracts pose landmarks
+                    via MediaPipe, runs a <code>CNN+LSTM</code> hybrid model.<br><br>
+                    Alert fires when confidence exceeds <code>75%</code> for
+                    <code>5 consecutive</code> windows.<br><br>
+                    Visit <code>/status</code> to confirm model load.
+                </p>
+            </div>
+
+        </div><!-- /sidebar -->
+
+    </div><!-- /main -->
+
+
+    <!-- ════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════ -->
+    <footer>
+        <div class="foot-l">
+            <span>
+                <div class="dsm"></div> FALLGUARD ACTIVE
+            </span>
+            <span>WINDOW: 30F</span>
+            <span>MODEL: CNN+LSTM</span>
+        </div>
+        <div class="foot-c">© 2025 <span>FallGuard</span> · Hospital Safety System</div>
+        <div class="foot-r" id="foot-uptime">UPTIME: 00:00:00</div>
+    </footer>
+
+
+    <!-- ════════════════════════════════════════
+     SCRIPTS  (load order matters)
+     1. toast     — no deps
+     2. ui        — no deps
+     3. rooms     — needs showToast, closeDrawer
+     4. sparkline — needs Chart.js
+     5. fullscreen— needs ROOMS, curRoom
+     6. export    — needs ROOMS, curRoom, alertHist, showToast, closeDrawer
+     7. socket    — needs everything above
+════════════════════════════════════════ -->
+    <script src="{{ url_for('static', filename='js/toast.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/ui.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/rooms.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/sparkline.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/fullscreen.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/export.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/socket.js') }}"></script>
+
+    <!-- Init calls that need DOM + all scripts ready -->
+    <script>
+        buildRooms();       // rooms.js  — populate room dropdown & drawer list
+        initSparkline();    // sparkline.js — boot Chart.js canvas
+    </script>
+
+</body>
+
+</html>

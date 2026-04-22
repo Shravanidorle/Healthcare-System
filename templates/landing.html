@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>City General Hospital | FallGuard AI</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+
+    <style>
+        /* Specific styles for the Landing Page Hero */
+        .hero {
+            height: 75vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: radial-gradient(circle at center, var(--surface2) 0%, var(--bg) 100%);
+            padding: 20px;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 20px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        /* Enhanced Typography for Hero Section */
+        .hero-content h1 {
+            font-family: 'DM Sans', sans-serif;
+            font-size: clamp(2.5rem, 6vw, 4.2rem);
+            /* Scales perfectly between mobile and desktop */
+            font-weight: 800;
+            /* Extra bold for impact */
+            line-height: 1.1;
+            letter-spacing: -2px;
+            /* Tight kerning for a modern look */
+            margin-bottom: 24px;
+            color: #ffffff;
+        }
+
+        .hero-content h1 span {
+            /* Glowing Gradient Effect */
+            background: linear-gradient(90deg, var(--green) 0%, var(--blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+            filter: drop-shadow(0 0 10px var(--green-dim));
+        }
+
+        .hero-content p {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 400;
+            color: var(--muted);
+            line-height: 1.7;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-content h1 span {
+            color: var(--green);
+            text-shadow: 0 0 15px var(--green-dim);
+        }
+
+        .hero-content p {
+            color: var(--muted);
+            max-width: 650px;
+            margin: 0 auto 40px;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        .btn-main {
+            background: var(--green);
+            color: var(--bg);
+            padding: 18px 45px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            display: inline-block;
+            font-family: var(--sans);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-main:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px var(--green-dim);
+            filter: brightness(1.1);
+        }
+
+        /* Admin Section Styling */
+        .admin-access {
+            padding: 60px 20px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            background: var(--surface);
+        }
+
+        .admin-tag {
+            font-family: var(--mono);
+            color: var(--muted);
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+
+        .btn-outline {
+            border: 1px solid var(--blue);
+            color: var(--blue);
+            padding: 14px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+            display: inline-block;
+        }
+
+        .btn-outline:hover {
+            background: var(--blue-dim);
+            border-color: var(--blue);
+            box-shadow: 0 0 15px var(--blue-dim);
+        }
+
+        /* Navigation adjustments for landing */
+        nav {
+            height: 70px;
+            border-bottom: 1px solid var(--border);
+            padding: 0 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--surface);
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            margin-left: 35px;
+            font-size: 0.85rem;
+            font-family: var(--mono);
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--green);
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 0 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            /* Mobile simplified */
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div
+            style="font-family: var(--mono); font-weight: 700; font-size: 1.1rem; display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 1.5rem;">🏥</span>
+            CITY GENERAL <span style="color:var(--green)">HOSPITAL</span>
+        </div>
+        <div class="nav-links">
+            <a href="/">HOME</a>
+            <a href="/about">TECHNOLOGY</a>
+            <a href="/contact">APPOINTMENTS</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Compassionate Care, <br><span>Advanced Technology.</span></h1>
+            <p>Providing world-class medical services integrated with FallGuard AI-driven safety monitoring for the
+                highest level of patient protection.</p>
+            <a href="/contact" class="btn-main">Book Appointment</a>
+        </div>
+    </section>
+
+    <div class="admin-access">
+        <div class="admin-tag">Authorized Personnel Only</div>
+        <a href="/dashboard" class="btn-outline">🔐 ACCESS LIVE SURVEILLANCE LOGS</a>
+    </div>
+
+    <footer
+        style="height: 60px; display: flex; align-items: center; justify-content: center; background: var(--bg); border-top: 1px solid var(--border); color: var(--muted); font-family: var(--mono); font-size: 0.7rem;">
+        © 2026 CITY GENERAL HOSPITAL · POWERED BY FALLGUARD AI
+    </footer>
+</body>
+
+</html>

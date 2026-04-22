@@ -1,0 +1,75 @@
+/* ============================================================
+   variables.css — Design tokens & global reset
+   ============================================================ */
+
+:root {
+  --bg: #070b0f;
+  --surface: #0d1218;
+  --surface2: #121a22;
+  --surface3: #18222c;
+  --border: #1c2830;
+  --border2: #243040;
+  --green: #00e57a;
+  --green-dim: rgba(0, 229, 122, 0.1);
+  --red: #ff3b5c;
+  --red-dim: rgba(255, 59, 92, 0.12);
+  --blue: #3db8ff;
+  --blue-dim: rgba(61, 184, 255, 0.1);
+  --amber: #ffb830;
+  --amber-dim: rgba(255, 184, 48, 0.1);
+  --text: #cdd6e0;
+  --muted: #4e6070;
+  --mono: "Space Mono", monospace;
+  --sans: "DM Sans", sans-serif;
+  --radius: 10px;
+}
+
+/* ── Reset ── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* Scanline overlay */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 9000;
+}
+
+/* ── Shared animation ── */
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}

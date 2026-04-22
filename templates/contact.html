@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FallGuard — Hospital Safety System</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@400;500;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+
+    <style>
+        /* Optional: Add a specific style to center your forms */
+        .page-container {
+            max-width: 800px;
+            margin: 80px auto;
+            padding: 20px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-container">
+        <h2 style="font-family: var(--mono); color: var(--green); margin-bottom: 20px;">Book Appointment</h2>
+        <form action="/contact" method="POST" style="display: flex; flex-direction: column; gap: 15px;">
+            <label style="color: var(--muted); font-size: 0.8em;">Full Name</label>
+            <input type="text" name="name"
+                style="background: var(--surface2); border: 1px solid var(--border); color: white; padding: 12px; border-radius: 8px;">
+
+            <label style="color: var(--muted); font-size: 0.8em;">Room/Department</label>
+            <select name="dept"
+                style="background: var(--surface2); border: 1px solid var(--border); color: white; padding: 12px; border-radius: 8px;">
+                <option>Cardiology</option>
+                <option>Emergency Care</option>
+                <option>Pediatrics</option>
+            </select>
+
+            <button type="submit" class="exp-btn"
+                style="background: var(--green); color: var(--bg); font-weight: bold; margin-top: 10px;">
+                Confirm Appointment
+            </button>
+        </form>
+    </div>
+</body>
+
+</html>
