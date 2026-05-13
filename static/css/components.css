@@ -603,3 +603,246 @@
   font-size: 0.85em;
   color: var(--green);
 }
+
+/* ============================================================
+   FAT FOOTER
+   ============================================================ */
+.fat-footer {
+    background: #0a0a0a;
+    border-top: 2px solid var(--green);
+    color: var(--text);
+    font-family: var(--sans);
+    padding: 60px 40px 0;
+    margin-top: auto;
+    position: relative;
+    z-index: 100;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-bottom: 50px;
+}
+
+.footer-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.footer-col h4 {
+    font-family: var(--mono);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 25px;
+    margin-top: 0;
+}
+
+.ff-brand {
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+.ff-brand span {
+    color: var(--green);
+}
+.mission-statement {
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin: 0;
+}
+
+.footer-col a {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.95rem;
+    margin-bottom: 15px;
+    transition: color 0.2s, padding-left 0.2s;
+}
+.footer-col a:hover {
+    color: var(--green);
+    padding-left: 5px;
+}
+
+.contact-line {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--text);
+    margin-bottom: 12px;
+}
+
+.social-links {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.glowing-icon svg {
+    width: 24px;
+    height: 24px;
+    stroke: var(--muted);
+    transition: all 0.3s ease;
+}
+
+.glowing-icon:hover svg {
+    stroke: var(--green);
+    filter: drop-shadow(0 0 8px var(--green-dim));
+    transform: translateY(-2px);
+}
+
+.sub-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    border-top: 1px solid var(--border);
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+}
+
+.system-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-pulse {
+    width: 8px;
+    height: 8px;
+    background: var(--green);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--green);
+    animation: statusBlink 2s ease-in-out infinite alternate;
+}
+
+@keyframes statusBlink {
+    0% { opacity: 0.4; box-shadow: 0 0 5px var(--green); }
+    100% { opacity: 1; box-shadow: 0 0 15px var(--green); }
+}
+
+@media (max-width: 900px) {
+    .footer-grid { grid-template-columns: repeat(2, 1fr); gap: 50px; }
+    .fat-footer { padding: 50px 30px 0; }
+}
+@media (max-width: 600px) {
+    .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+    .sub-footer { flex-direction: column; gap: 10px; text-align: center; }
+}
+
+/* ── MEDICAL CONSOLE UPGRADES ── */
+
+.card, .spark-card, .feed-box {
+    background: linear-gradient(135deg, rgba(13, 20, 28, 0.6), rgba(5, 10, 15, 0.8)) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(0, 255, 136, 0.2) !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 255, 136, 0.03) !important;
+}
+
+.card-title, .spark-title, .feed-lbl {
+    color: rgba(255, 255, 255, 0.8) !important;
+    text-shadow: 0 0 5px rgba(255,255,255,0.2) !important;
+}
+
+/* Targeting & Vignette */
+.vwrap {
+    position: relative;
+    border: 1px solid rgba(0, 255, 136, 0.3) !important;
+    overflow: hidden;
+}
+
+/* Layer the vignette ON TOP of the image using ::before */
+.vwrap::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.95) !important;
+    z-index: 5 !important;
+}
+
+.vwrap::after {
+    filter: drop-shadow(0 0 8px var(--green));
+    opacity: 1 !important;
+    z-index: 10 !important;
+}
+
+.vwrap.priv::after {
+    filter: drop-shadow(0 0 8px var(--blue));
+}
+
+/* Ensure the image sits structurally below the vignette */
+.vwrap img {
+    position: relative;
+    z-index: 1 !important; 
+}
+
+.cv-label-bg {
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 200px;
+    height: 30px;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    border-top-right-radius: 8px;
+    z-index: 2;
+    border-right: 1px solid rgba(0, 255, 136, 0.2);
+    border-top: 1px solid rgba(0, 255, 136, 0.2);
+}
+
+/* Animated Status Hardware Dots */
+.sbadge {
+    font-size: 0 !important;
+}
+
+.sbadge.ok::before {
+    content: "";
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 12px var(--green);
+    animation: ledPulseG 2s ease-in-out infinite alternate;
+    display: inline-block;
+}
+
+.sbadge.err::before {
+    content: "";
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--red);
+    box-shadow: 0 0 12px var(--red);
+    animation: ledPulseR 0.8s ease-in-out infinite alternate;
+    display: inline-block;
+}
+
+@keyframes ledPulseG {
+    0% { opacity: 0.4; box-shadow: 0 0 4px var(--green); }
+    100% { opacity: 1; box-shadow: 0 0 18px rgba(0,255,136,0.8); }
+}
+
+@keyframes ledPulseR {
+    0% { opacity: 0.4; box-shadow: 0 0 4px var(--red); }
+    100% { opacity: 1; box-shadow: 0 0 18px var(--red); }
+}
+
+/* Slimmer header modifications target layout.css via strict override */
+header {
+    height: 60px !important;
+    background: rgba(13, 18, 24, 0.85) !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+/* Chart enhancement overlay logic */
+.spark-canvas {
+    filter: drop-shadow(0 0 8px rgba(0,255,136,0.3));
+}

@@ -4,29 +4,11 @@
 
 var socket;
 
-document.addEventListener("DOMContentLoaded", () => {
-  socket = io();
-
-  socket.on("connect", () => {
-    document.getElementById("live-dot").classList.add("on");
-    document.getElementById("live-txt").textContent = "LIVE";
-    document.getElementById("sock-st").textContent = "ONLINE";
-    document.getElementById("sock-st").className = "sbadge ok";
-    showToast("success", "🔗 Connected", "Live socket connection established.");
-  });
-
-  socket.on("disconnect", () => {
-    document.getElementById("live-dot").classList.remove("on");
-    document.getElementById("live-txt").textContent = "OFFLINE";
-    document.getElementById("sock-st").textContent = "OFFLINE";
-    document.getElementById("sock-st").className = "sbadge err";
-    showToast("error", "⚡ Disconnected", "Socket lost. Reconnecting...");
-  });
-
-  socket.on("alert", (data) => {
-    /* your existing alert code stays here */
-  });
+socket = io({
+  reconnection: true,
+  reconnectionDelay: 5000
 });
+
 var fallCt = 0;
 var alertCt = 0;
 
@@ -34,18 +16,40 @@ var alertCt = 0;
 
 socket.on("connect", () => {
   document.getElementById("live-dot").classList.add("on");
-  document.getElementById("live-txt").textContent = "LIVE";
+  const liveTxt = document.getElementById("live-txt");
+  if (liveTxt) {
+    liveTxt.textContent = "LIVE";
+    liveTxt.style.color = "";
+  }
   document.getElementById("sock-st").textContent = "ONLINE";
   document.getElementById("sock-st").className = "sbadge ok";
   showToast("success", "🔗 Connected", "Live socket connection established.");
+
+  // Re-join the correct room upon successful connection/reconnection
+  if (typeof curRoom !== 'undefined') {
+    socket.emit('set_room', {room: curRoom});
+    console.log(`[Socket] Re-joined room: ${curRoom} at ${new Date().toISOString()}`);
+  }
 });
 
 socket.on("disconnect", () => {
   document.getElementById("live-dot").classList.remove("on");
-  document.getElementById("live-txt").textContent = "OFFLINE";
+  const liveTxt = document.getElementById("live-txt");
+  if (liveTxt) {
+    liveTxt.textContent = "Offline (Attempting Reconnect...)";
+    liveTxt.style.color = "red";
+  }
   document.getElementById("sock-st").textContent = "OFFLINE";
   document.getElementById("sock-st").className = "sbadge err";
   showToast("error", "⚡ Disconnected", "Socket lost. Reconnecting...");
+});
+
+socket.on("reconnect_attempt", () => {
+  console.log(`[Socket] Reconnect attempt at ${new Date().toISOString()}`);
+});
+
+socket.on("connect_error", (error) => {
+  console.error(`[Socket Error] at ${new Date().toISOString()}:`, error);
 });
 
 // ── FALL ALERT ──────────────────────────────────────────────

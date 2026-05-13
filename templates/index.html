@@ -8,13 +8,13 @@
 
     <!-- Google Fonts -->
     <link
-        href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"
         rel="stylesheet">
 
     <!-- Stylesheets (order matters) -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}?v=4">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}?v=4">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}?v=4">
 
     <!-- Third-party libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" defer></script>
@@ -58,6 +58,20 @@
 
         <div class="drw-scroll">
 
+            <!-- Hospital Links -->
+            <div class="drw-sec">
+                <div class="drw-sec-title">Hospital Portal</div>
+                <div class="nav-item" onclick="stopAndNavigate('/')">
+                    <span class="nav-icon">🏠</span> Home
+                </div>
+                <div class="nav-item" onclick="stopAndNavigate('/about')">
+                    <span class="nav-icon">🔬</span> Technology
+                </div>
+                <div class="nav-item" onclick="stopAndNavigate('/contact')">
+                    <span class="nav-icon">📅</span> Appointments
+                </div>
+            </div>
+
             <!-- Navigation -->
             <div class="drw-sec">
                 <div class="drw-sec-title">Navigation</div>
@@ -76,11 +90,12 @@
                 </div>
             </div>
 
-            <!-- Export -->
             <div class="drw-sec">
                 <div class="drw-sec-title">Export Report</div>
                 <button class="exp-btn" onclick="exportPDF()">📄 &nbsp;Download PDF Report</button>
-                <button class="exp-btn csv" onclick="exportCSV()">📊 &nbsp;Download CSV Log</button>
+                <a href="/download-logs" download="fall_logs.csv" style="display:block;width:100%;text-decoration:none;">
+                    <button class="exp-btn csv" style="width:100%;cursor:pointer;">📊 &nbsp;Download CSV Log</button>
+                </a>
             </div>
 
             <!-- Settings -->
@@ -165,6 +180,9 @@
 
         </div>
         <div class="header-right">
+            <div id="foot-uptime"
+                style="font-family: var(--mono); font-size: 0.85em; color: var(--green); margin-right: 20px; letter-spacing: 1px; font-weight: bold; align-self: center;">
+                UPTIME: 00:00:00</div>
             <div class="live-pill">
                 <div class="live-dot" id="live-dot"></div>
                 <span id="live-txt">CONNECTING</span>
@@ -199,6 +217,7 @@
                         <button class="fsb" onclick="openFS('cam')">⛶ Fullscreen</button>
                     </div>
                     <div class="vwrap" onclick="openFS('cam')">
+                        <div class="cv-label-bg"></div>
                         <img id="video-feed" src="{{ url_for('video_feed') }}" alt="Camera Feed"
                             onerror="showOff('co1')">
                         <div class="cam-off" id="co1">
@@ -219,6 +238,7 @@
                         </button>
                     </div>
                     <div class="vwrap priv" onclick="openFS('skel')">
+                        <div class="cv-label-bg" style="width: 250px;"></div>
                         <img id="skel-feed" src="{{ url_for('skeleton_feed') }}" alt="Skeleton Feed"
                             onerror="showOff('co2')">
                         <div class="cam-off" id="co2">
@@ -291,6 +311,28 @@
                 <ul id="alert-log">
                     <li id="no-alerts-msg">No alerts yet</li>
                 </ul>
+                <!-- Permanent server-side CSV download button -->
+                <a href="/download-logs" download="fall_logs.csv"
+                   style="display:block; margin-top:12px; text-decoration:none;">
+                    <button id="btn-download-csv"
+                        style="
+                            width: 100%;
+                            padding: 9px 14px;
+                            background: transparent;
+                            border: 1.5px solid #39ff14;
+                            border-radius: 8px;
+                            color: #39ff14;
+                            font-family: var(--mono);
+                            font-size: 0.75em;
+                            letter-spacing: 1.2px;
+                            cursor: pointer;
+                            text-transform: uppercase;
+                            transition: background 0.2s, box-shadow 0.2s;
+                        "
+                        onmouseover="this.style.background='rgba(57,255,20,0.12)';this.style.boxShadow='0 0 12px #39ff1455';"
+                        onmouseout="this.style.background='transparent';this.style.boxShadow='none';"
+                    >📥 &nbsp;Download CSV Log</button>
+                </a>
             </div>
 
             <!-- System Info -->
@@ -322,7 +364,7 @@
             <span>MODEL: CNN+LSTM</span>
         </div>
         <div class="foot-c">© 2025 <span>FallGuard</span> · Hospital Safety System</div>
-        <div class="foot-r" id="foot-uptime">UPTIME: 00:00:00</div>
+
     </footer>
 
 
@@ -348,6 +390,29 @@
     <script>
         buildRooms();       // rooms.js  — populate room dropdown & drawer list
         initSparkline();    // sparkline.js — boot Chart.js canvas
+
+        // Task 2: Frontend 'BeforeUnload' Event
+        function sendStopSignal() {
+            if (navigator.sendBeacon) {
+                navigator.sendBeacon('/stop_surveillance');
+            } else {
+                fetch('/stop_surveillance', { keepalive: true });
+            }
+        }
+
+        window.addEventListener('beforeunload', function (e) {
+            sendStopSignal();
+        });
+
+        window.addEventListener('pagehide', function (e) {
+            sendStopSignal();
+        });
+
+        // Task 3: Navigation Links Logic
+        function stopAndNavigate(url) {
+            sendStopSignal();
+            window.location.href = url;
+        }
     </script>
 
 </body>

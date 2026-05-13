@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How CNN+LSTM Models are Revolutionizing Ward Safety | City General Hospital</title>
+    <meta name="description" content="Exploring the intersection of deep learning and real-time patient monitoring for fall prevention using CNN+LSTM hybrid architectures.">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}?v=4">
+    <style>
+        /* ── Page Base ── */
+        body { background: var(--bg); color: var(--text); font-family: var(--sans); margin: 0; padding: 0; }
+
+        /* ── Nav ── */
+        nav {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+            height: 70px; border-bottom: 1px solid var(--border);
+            padding: 0 50px; display: flex; align-items: center;
+            justify-content: space-between;
+            background: rgba(7,11,15,0.92); backdrop-filter: blur(12px);
+            box-sizing: border-box;
+        }
+        .nav-logo { font-family: var(--mono); font-weight: 700; font-size: 1.05rem; display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
+        .nav-links a { color: var(--text); text-decoration: none; margin-left: 30px; font-size: 0.82rem; font-family: var(--mono); transition: color 0.2s; letter-spacing: 1px; }
+        .nav-links a:hover { color: var(--green); }
+
+        /* ── Hero Banner ── */
+        .blog-hero {
+            margin-top: 70px; padding: 80px 20px 60px;
+            background: linear-gradient(135deg, #070b0f 0%, #0d1218 50%, #07130e 100%);
+            border-bottom: 1px solid var(--border);
+            position: relative; overflow: hidden; text-align: center;
+        }
+        .blog-hero::before {
+            content: ''; position: absolute; inset: 0;
+            background-image: linear-gradient(rgba(0,229,122,0.04) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(0,229,122,0.04) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+        .blog-tag-hero {
+            display: inline-block; font-family: var(--mono); font-size: 0.72rem;
+            letter-spacing: 3px; text-transform: uppercase; color: var(--green);
+            border: 1px solid rgba(0,229,122,0.3); padding: 6px 16px;
+            border-radius: 20px; margin-bottom: 24px;
+            background: rgba(0,229,122,0.06);
+        }
+        .blog-hero h1 {
+            font-family: var(--sans); font-size: clamp(1.8rem, 4vw, 3rem);
+            font-weight: 800; color: #fff; line-height: 1.2;
+            max-width: 800px; margin: 0 auto 20px; letter-spacing: -1px;
+            position: relative;
+        }
+        .blog-hero-meta { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); letter-spacing: 1px; position: relative; }
+        .blog-hero-meta span { color: var(--green); }
+
+        /* ── Article Body ── */
+        .article-wrap { max-width: 820px; margin: 0 auto; padding: 60px 20px 100px; }
+
+        .article-img {
+            width: 100%; border-radius: 12px; margin-bottom: 50px;
+            border: 1px solid var(--border); object-fit: cover; max-height: 420px;
+            display: block;
+        }
+
+        .article-body h2 {
+            font-family: var(--sans); font-size: 1.5rem; font-weight: 700;
+            color: #fff; margin: 48px 0 16px; letter-spacing: -0.5px;
+            padding-left: 16px; border-left: 3px solid var(--green);
+        }
+        .article-body h3 {
+            font-family: var(--sans); font-size: 1.15rem; font-weight: 600;
+            color: var(--green); margin: 32px 0 12px;
+        }
+        .article-body p {
+            font-size: 1.05rem; line-height: 1.85; color: var(--text);
+            margin-bottom: 22px;
+        }
+        .article-body ul { margin: 0 0 22px 20px; }
+        .article-body li { line-height: 1.8; color: var(--text); font-size: 1rem; margin-bottom: 8px; }
+
+        /* Callout box */
+        .callout {
+            background: rgba(0,229,122,0.06); border: 1px solid rgba(0,229,122,0.2);
+            border-radius: 10px; padding: 22px 28px; margin: 36px 0;
+        }
+        .callout p { margin: 0; color: #c8fce4; font-size: 1rem; }
+        .callout-label { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 2px; color: var(--green); margin-bottom: 8px; text-transform: uppercase; }
+
+        /* Code / stat block */
+        .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 36px 0; }
+        .stat-box {
+            background: var(--surface); border: 1px solid var(--border2);
+            border-radius: 10px; padding: 24px 18px; text-align: center;
+        }
+        .stat-val { font-family: var(--mono); font-size: 2rem; color: var(--green); font-weight: 700; }
+        .stat-lbl { font-size: 0.8rem; color: var(--muted); margin-top: 6px; }
+
+        /* Back button */
+        .back-btn {
+            display: inline-flex; align-items: center; gap: 10px;
+            font-family: var(--mono); font-size: 0.82rem; letter-spacing: 1px;
+            text-decoration: none; color: var(--green);
+            border: 1px solid rgba(0,229,122,0.3); padding: 12px 22px;
+            border-radius: 8px; transition: all 0.2s; margin-bottom: 48px;
+            background: rgba(0,229,122,0.04);
+        }
+        .back-btn:hover { background: rgba(0,229,122,0.1); box-shadow: 0 0 16px rgba(0,229,122,0.2); }
+
+        /* Footer strip */
+        .blog-footer { border-top: 1px solid var(--border); padding: 30px 20px; text-align: center; font-family: var(--mono); font-size: 0.75rem; color: var(--muted); letter-spacing: 1px; }
+
+        @media (max-width: 600px) { .stat-grid { grid-template-columns: 1fr; } nav { padding: 0 20px; } .nav-links { display: none; } }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <a class="nav-logo" href="/">
+            <span style="font-size:1.4rem">🏥</span>
+            CITY GENERAL <span style="color:var(--green)">&nbsp;HOSPITAL</span>
+        </a>
+        <div class="nav-links">
+            <a href="/">HOME</a>
+            <a href="/about">TECHNOLOGY</a>
+            <a href="/contact">APPOINTMENTS</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <div class="blog-hero">
+        <div class="blog-tag-hero">AI Research</div>
+        <h1>How CNN+LSTM Models are Revolutionizing Ward Safety</h1>
+        <div class="blog-hero-meta">
+            <span>City General Hospital Research</span> &nbsp;·&nbsp; April 2025 &nbsp;·&nbsp; 8 min read
+        </div>
+    </div>
+
+    <!-- ARTICLE -->
+    <div class="article-wrap">
+        <a href="/" class="back-btn">← Back to Home</a>
+
+        <img src="{{ url_for('static', filename='images/blog1.png') }}" alt="CNN+LSTM Fall Detection Model" class="article-img">
+
+        <div class="article-body">
+
+            <h2>The Problem With Traditional Fall Detection</h2>
+            <p>For decades, fall detection in hospitals relied on pressure sensors embedded in mattresses and floors, infrared break-beam systems, or nurse call buttons. While these approaches provided basic coverage, they suffered from three critical flaws: high false-positive rates, a complete inability to detect falls mid-room, and no capacity to predict risk before a fall occurred.</p>
+            <p>At City General Hospital, we recorded over 340 fall incidents across ward floors in a single year prior to 2023. Of those, 61% occurred within a documented "safe" zone where legacy sensors simply had no coverage. The human cost — longer stays, fractures, litigation — was significant.</p>
+
+            <div class="callout">
+                <div class="callout-label">Research Finding</div>
+                <p>Traditional sensor-based systems miss <strong>up to 61%</strong> of in-room falls due to spatial coverage gaps. Vision-based AI closes this gap entirely.</p>
+            </div>
+
+            <h2>Enter Hybrid Deep Learning: CNN + LSTM</h2>
+            <p>The FallGuard system deployed at City General operates on a two-stage neural architecture that mirrors how human perception works: spatial understanding followed by temporal reasoning.</p>
+
+            <h3>Stage 1 — Convolutional Feature Extraction (CNN)</h3>
+            <p>A Convolutional Neural Network (CNN) processes each video frame to extract high-level spatial features: body orientation, limb angles, the geometric relationship between the torso and hips. Using MediaPipe Pose Estimation, 33 skeletal landmarks are detected per frame at over 30 FPS, providing the raw coordinate stream the CNN processes.</p>
+
+            <h3>Stage 2 — Temporal Pattern Recognition (LSTM)</h3>
+            <p>A Long Short-Term Memory (LSTM) network receives the CNN's spatial feature maps across a rolling 30-frame window (approximately 1 second of video). This temporal view is what gives the system its edge — it does not just ask "is this person falling right now?" but rather "given the last second of motion, is this trajectory consistent with a fall event?"</p>
+            <p>The LSTM's gated memory allows it to distinguish between a rapid intentional lean (reaching for an object) and the involuntary, decelerating collapse characteristic of a genuine fall, with a confidence score emitted in real time.</p>
+
+            <div class="stat-grid">
+                <div class="stat-box">
+                    <div class="stat-val">97.3%</div>
+                    <div class="stat-lbl">Detection Accuracy</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-val">14ms</div>
+                    <div class="stat-lbl">Average AI Latency</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-val">0.8%</div>
+                    <div class="stat-lbl">False Positive Rate</div>
+                </div>
+            </div>
+
+            <h2>Privacy by Design: Skeletal Masking</h2>
+            <p>A critical ethical concern with video-based monitoring is patient dignity. FallGuard addresses this through a "privacy-first" architecture: the system streams only a skeletal wireframe overlay to monitoring stations — no identifiable video is ever displayed or stored. The raw camera feed is processed entirely on-device and is never transmitted to a server in unencrypted form.</p>
+            <p>Staff see a black canvas with cyan joint markers and bone connections, providing all the information needed to assess posture and fall risk without compromising patient privacy.</p>
+
+            <h2>Clinical Integration at City General</h2>
+            <p>The system went live across four wards in March 2024. Integration with the existing nurse call infrastructure meant that when FallGuard's confidence score exceeds the threshold for 8 consecutive detection windows, an alert is automatically pushed to the ward's central station and the assigned nurse's mobile terminal simultaneously — typically within 2 seconds of event onset.</p>
+
+            <ul>
+                <li>Geriatrics Ward — 24/7 coverage, 12 rooms</li>
+                <li>Neurology Ward — 24/7 coverage, post-surgical recovery</li>
+                <li>ICU Bay — Supplementary monitoring alongside nursing staff</li>
+                <li>Orthopedic Recovery — Focused on post-operative mobility risks</li>
+            </ul>
+
+            <div class="callout">
+                <div class="callout-label">Outcome After 6 Months</div>
+                <p>Reportable fall incidents decreased by <strong>78%</strong> across monitored wards. Mean nurse response time dropped from <strong>4.2 minutes</strong> to <strong>47 seconds</strong>.</p>
+            </div>
+
+            <h2>The Road Ahead</h2>
+            <p>The next phase of FallGuard development focuses on predictive risk scoring — using longer LSTM windows to identify behavioral patterns that precede falls by several minutes, enabling nurses to intervene proactively. Future integration with electronic health records will allow the model to factor in patient-specific risk indicators such as sedative medications, recent blood pressure readings, and mobility assessments.</p>
+            <p>The intersection of deep learning and clinical care is no longer theoretical — at City General Hospital, it is saving lives every day.</p>
+
+        </div>
+    </div>
+
+    <div class="blog-footer">
+        © 2025 <span style="color:var(--green)">City General Hospital</span> · FallGuard AI Research Division
+    </div>
+
+</body>
+</html>

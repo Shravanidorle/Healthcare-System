@@ -54,6 +54,12 @@ function selectRoom(id) {
   document.getElementById("cur-room").textContent = id;
   closeRoomDD();
   buildRooms();
+
+  // Notify the Python backend so fall_logs.csv uses the correct room name
+  if (typeof socket !== "undefined" && socket.connected) {
+    socket.emit("set_room", { room: r.name });
+  }
+
   showToast(
     "info",
     "📍 Room Changed",

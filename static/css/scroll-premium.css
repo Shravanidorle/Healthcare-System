@@ -1,0 +1,138 @@
+/* ============================================================
+   scroll-premium.css
+   Premium section pinning, cross-fade transitions & dot-nav
+   ============================================================ */
+
+/* ── 1. Disable the old CSS sticky stacking (GSAP takes over) ── */
+.stacking-wrapper {
+    /* GSAP ScrollTrigger will control z-index & position */
+}
+
+/* Remove old position:sticky — GSAP pins instead */
+.sticky-section {
+    position: relative !important;   /* GSAP overrides to fixed when pinned */
+    top: auto !important;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    will-change: transform, opacity;
+    overflow: hidden;
+}
+
+/* ── 2. Section entrance state (hidden before reveal) ── */
+.section-panel {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ── 3. Smooth scroll on html (needed for GSAP snapping) ── */
+html {
+    scroll-behavior: auto; /* GSAP handles smoothness — disable native */
+}
+
+/* ── 4. Side Dot Navigation ── */
+#dot-nav {
+    position: fixed;
+    right: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 9000;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    pointer-events: auto;
+}
+
+.dot-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    justify-content: flex-end;
+}
+
+.dot-nav-item .dot-label {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    opacity: 0;
+    transform: translateX(6px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.dot-nav-item:hover .dot-label,
+.dot-nav-item.active .dot-label {
+    opacity: 1;
+    transform: translateX(0);
+    color: var(--green);
+}
+
+.dot-nav-item .dot-pip {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--muted);
+    border: 1.5px solid transparent;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    flex-shrink: 0;
+}
+
+.dot-nav-item.active .dot-pip {
+    width: 12px;
+    height: 12px;
+    background: var(--green);
+    border-color: rgba(0, 229, 122, 0.4);
+    box-shadow: 0 0 10px rgba(0, 229, 122, 0.6);
+}
+
+.dot-nav-item:hover .dot-pip {
+    background: var(--text);
+    transform: scale(1.2);
+}
+
+/* Hide on mobile */
+@media (max-width: 768px) {
+    #dot-nav { display: none; }
+}
+
+/* ── 5. Progress bar at top ── */
+#scroll-progress {
+    position: fixed;
+    top: 70px; /* below nav */
+    left: 0;
+    height: 2px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--green), var(--blue));
+    z-index: 9001;
+    transition: none; /* GSAP controls this */
+    box-shadow: 0 0 8px rgba(0, 229, 122, 0.5);
+}
+
+/* ── 6. Section slide-up transition layer ── */
+.sticky-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: inherit;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* ── 7. Footer section override (full width, no center-flex) ── */
+.footer-sticky-section {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    height: auto !important;
+    min-height: 100vh;
+}

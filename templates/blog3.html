@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Future of Hospital Automation | City General Hospital</title>
+    <meta name="description" content="How smart wards and automated alert systems are decreasing nurse fatigue and saving lives through intelligent hospital automation.">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}?v=4">
+    <style>
+        body { background: var(--bg); color: var(--text); font-family: var(--sans); margin: 0; padding: 0; }
+
+        nav {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+            height: 70px; border-bottom: 1px solid var(--border);
+            padding: 0 50px; display: flex; align-items: center;
+            justify-content: space-between;
+            background: rgba(7,11,15,0.92); backdrop-filter: blur(12px);
+            box-sizing: border-box;
+        }
+        .nav-logo { font-family: var(--mono); font-weight: 700; font-size: 1.05rem; display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
+        .nav-links a { color: var(--text); text-decoration: none; margin-left: 30px; font-size: 0.82rem; font-family: var(--mono); transition: color 0.2s; letter-spacing: 1px; }
+        .nav-links a:hover { color: var(--amber); }
+
+        .blog-hero {
+            margin-top: 70px; padding: 80px 20px 60px;
+            background: linear-gradient(135deg, #070b0f 0%, #0d1218 50%, #13100a 100%);
+            border-bottom: 1px solid var(--border);
+            position: relative; overflow: hidden; text-align: center;
+        }
+        .blog-hero::before {
+            content: ''; position: absolute; inset: 0;
+            background-image: linear-gradient(rgba(255,184,48,0.04) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255,184,48,0.04) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+        .blog-tag-hero {
+            display: inline-block; font-family: var(--mono); font-size: 0.72rem;
+            letter-spacing: 3px; text-transform: uppercase; color: var(--amber);
+            border: 1px solid rgba(255,184,48,0.3); padding: 6px 16px;
+            border-radius: 20px; margin-bottom: 24px; background: rgba(255,184,48,0.06);
+        }
+        .blog-hero h1 {
+            font-family: var(--sans); font-size: clamp(1.8rem, 4vw, 3rem);
+            font-weight: 800; color: #fff; line-height: 1.2;
+            max-width: 800px; margin: 0 auto 20px; letter-spacing: -1px; position: relative;
+        }
+        .blog-hero-meta { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); letter-spacing: 1px; position: relative; }
+        .blog-hero-meta span { color: var(--amber); }
+
+        .article-wrap { max-width: 820px; margin: 0 auto; padding: 60px 20px 100px; }
+        .article-img { width: 100%; border-radius: 12px; margin-bottom: 50px; border: 1px solid var(--border); object-fit: cover; max-height: 420px; display: block; }
+
+        .article-body h2 {
+            font-family: var(--sans); font-size: 1.5rem; font-weight: 700;
+            color: #fff; margin: 48px 0 16px; letter-spacing: -0.5px;
+            padding-left: 16px; border-left: 3px solid var(--amber);
+        }
+        .article-body h3 { font-family: var(--sans); font-size: 1.15rem; font-weight: 600; color: var(--amber); margin: 32px 0 12px; }
+        .article-body p { font-size: 1.05rem; line-height: 1.85; color: var(--text); margin-bottom: 22px; }
+        .article-body ul { margin: 0 0 22px 20px; }
+        .article-body li { line-height: 1.8; color: var(--text); font-size: 1rem; margin-bottom: 8px; }
+
+        .callout {
+            background: rgba(255,184,48,0.06); border: 1px solid rgba(255,184,48,0.2);
+            border-radius: 10px; padding: 22px 28px; margin: 36px 0;
+        }
+        .callout p { margin: 0; color: #fff5d0; font-size: 1rem; }
+        .callout-label { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 2px; color: var(--amber); margin-bottom: 8px; text-transform: uppercase; }
+
+        /* Timeline */
+        .timeline { margin: 40px 0; position: relative; padding-left: 30px; }
+        .timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--amber), var(--green)); }
+        .tl-item { position: relative; margin-bottom: 36px; }
+        .tl-dot { position: absolute; left: -26px; top: 4px; width: 14px; height: 14px; border-radius: 50%; background: var(--amber); box-shadow: 0 0 10px var(--amber); }
+        .tl-year { font-family: var(--mono); font-size: 0.75rem; color: var(--amber); letter-spacing: 2px; margin-bottom: 6px; }
+        .tl-title { font-weight: 700; color: #fff; font-size: 1rem; margin-bottom: 6px; }
+        .tl-desc { color: var(--muted); font-size: 0.92rem; line-height: 1.7; }
+
+        /* Stat row */
+        .stat-row { display: flex; gap: 16px; margin: 36px 0; flex-wrap: wrap; }
+        .stat-pill {
+            flex: 1; min-width: 160px; background: var(--surface);
+            border: 1px solid var(--border2); border-radius: 10px;
+            padding: 20px; text-align: center;
+        }
+        .stat-val { font-family: var(--mono); font-size: 1.8rem; color: var(--amber); font-weight: 700; }
+        .stat-lbl { font-size: 0.78rem; color: var(--muted); margin-top: 6px; }
+
+        .back-btn {
+            display: inline-flex; align-items: center; gap: 10px;
+            font-family: var(--mono); font-size: 0.82rem; letter-spacing: 1px;
+            text-decoration: none; color: var(--amber);
+            border: 1px solid rgba(255,184,48,0.3); padding: 12px 22px;
+            border-radius: 8px; transition: all 0.2s; margin-bottom: 48px;
+            background: rgba(255,184,48,0.04);
+        }
+        .back-btn:hover { background: rgba(255,184,48,0.1); box-shadow: 0 0 16px rgba(255,184,48,0.2); }
+
+        .blog-footer { border-top: 1px solid var(--border); padding: 30px 20px; text-align: center; font-family: var(--mono); font-size: 0.75rem; color: var(--muted); letter-spacing: 1px; }
+        @media (max-width: 600px) { nav { padding: 0 20px; } .nav-links { display: none; } .stat-row { flex-direction: column; } }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a class="nav-logo" href="/">
+            <span style="font-size:1.4rem">🏥</span>
+            CITY GENERAL <span style="color:var(--green)">&nbsp;HOSPITAL</span>
+        </a>
+        <div class="nav-links">
+            <a href="/">HOME</a>
+            <a href="/about">TECHNOLOGY</a>
+            <a href="/contact">APPOINTMENTS</a>
+        </div>
+    </nav>
+
+    <div class="blog-hero">
+        <div class="blog-tag-hero">Innovation</div>
+        <h1>Future of Hospital Automation</h1>
+        <div class="blog-hero-meta">
+            <span>City General Hospital</span> &nbsp;·&nbsp; April 2025 &nbsp;·&nbsp; 9 min read
+        </div>
+    </div>
+
+    <div class="article-wrap">
+        <a href="/" class="back-btn">← Back to Home</a>
+
+        <img src="{{ url_for('static', filename='images/blog3.png') }}" alt="Future of Hospital Automation" class="article-img">
+
+        <div class="article-body">
+
+            <h2>The Nurse Fatigue Crisis</h2>
+            <p>Before any discussion of automation, we must confront the human reality it is designed to address. Nursing shortages across the country have pushed ward staff to patient ratios that would have been considered unsafe a decade ago. In high-dependency units, a single nurse may be responsible for up to eight patients simultaneously — monitoring vitals, responding to call buttons, administering medications, and documenting care — all while attempting to be physically present for those at greatest risk.</p>
+            <p>The cognitive load is immense. Studies consistently show that fatigue-related errors account for a disproportionate share of adverse events in hospital settings. The solution is not to push staff harder — it is to build systems that handle the surveillance burden intelligently, freeing human attention for the decisions that only humans can make.</p>
+
+            <div class="stat-row">
+                <div class="stat-pill">
+                    <div class="stat-val">340+</div>
+                    <div class="stat-lbl">Fall incidents before FallGuard (per year)</div>
+                </div>
+                <div class="stat-pill">
+                    <div class="stat-val">78%</div>
+                    <div class="stat-lbl">Reduction in reportable falls (6 months post-deployment)</div>
+                </div>
+                <div class="stat-pill">
+                    <div class="stat-val">4.2→0.8</div>
+                    <div class="stat-lbl">Minutes: mean nurse response time</div>
+                </div>
+            </div>
+
+            <h2>What "Smart Ward" Actually Means</h2>
+            <p>The phrase "smart hospital" risks becoming marketing language divorced from operational reality. At City General, the definition is deliberately narrow and evidence-based: a smart ward is one where ambient sensors generate structured, actionable data that reduces the number of decisions human staff need to make under uncertainty.</p>
+            <p>A smart ward does not replace clinical judgment. It eliminates the preconditions for errors caused by divided attention and incomplete information.</p>
+
+            <h3>Ambient Monitoring Layer</h3>
+            <p>FallGuard operates as the ambient monitoring layer across geriatrics and neurology wards. The system runs continuously in background, generating a real-time risk assessment for each monitored room without requiring any action from ward staff. When the risk threshold is crossed, a precise, contextual alert is generated — not a generic alarm that staff have learned to deprioritize through repeated false positives.</p>
+
+            <h3>Alert Intelligence: Quality Over Quantity</h3>
+            <p>The single most important design decision in FallGuard is the confirmation window. Rather than alerting on a single high-confidence frame, the system requires 8 consecutive detection windows above the threshold before triggering an alert. This reduces the false positive rate to below 1% and means that when an alert fires, staff respond with the urgency it deserves — rather than the cautious skepticism that plagues traditional sensor-based systems.</p>
+
+            <h2>The Automation Roadmap</h2>
+
+            <div class="timeline">
+                <div class="tl-item">
+                    <div class="tl-dot"></div>
+                    <div class="tl-year">2023</div>
+                    <div class="tl-title">FallGuard v1 — Proof of Concept</div>
+                    <div class="tl-desc">Single-camera deployment in geriatrics ward. Manual review of all alerts. Accuracy validation against nursing incident reports.</div>
+                </div>
+                <div class="tl-item">
+                    <div class="tl-dot" style="background:var(--green);box-shadow:0 0 10px var(--green)"></div>
+                    <div class="tl-year">2024</div>
+                    <div class="tl-title">FallGuard v2 — Full Ward Deployment</div>
+                    <div class="tl-desc">Multi-room deployment with live dashboard, Socket.IO real-time alerts, nurse mobile integration, and AES-256 encrypted audit logs.</div>
+                </div>
+                <div class="tl-item">
+                    <div class="tl-dot" style="background:var(--blue);box-shadow:0 0 10px var(--blue)"></div>
+                    <div class="tl-year">2025 Q3</div>
+                    <div class="tl-title">Predictive Risk Scoring (In Development)</div>
+                    <div class="tl-desc">Extended LSTM windows for behavioral pattern analysis. Integration with EHR to factor in medication schedules, vitals trends, and mobility assessments.</div>
+                </div>
+                <div class="tl-item">
+                    <div class="tl-dot" style="background:var(--muted);box-shadow:0 0 10px rgba(100,130,150,0.5)"></div>
+                    <div class="tl-year">2026</div>
+                    <div class="tl-title">Hospital-Wide Orchestration Layer</div>
+                    <div class="tl-desc">Central AI coordinator managing FallGuard, bed sensors, and infusion pump alerts through a unified clinical decision support interface.</div>
+                </div>
+            </div>
+
+            <h2>Automation and the Changing Role of Nurses</h2>
+            <p>A reasonable concern about hospital automation is that it reduces human roles in ways that ultimately harm patient care. The evidence from FallGuard's deployment suggests the opposite. Nurses in monitored wards report spending significantly less time on passive surveillance rounds and significantly more time in direct patient interaction — the aspect of care that cannot be automated and that patients value most.</p>
+            <p>The alert system's precision means nurses arrive at incidents equipped with contextual information: confidence level, which room, what time the event began. This transforms the response from reactive to informed, improving both speed and quality of intervention.</p>
+
+            <div class="callout">
+                <div class="callout-label">Staff Feedback — 6-Month Review</div>
+                <p><strong>91%</strong> of nursing staff in monitored wards reported that FallGuard reduced their subjective workload. <strong>88%</strong> reported higher confidence in patient safety outcomes. Zero staff reported feeling "replaced" by the technology.</p>
+            </div>
+
+            <h2>The Interoperability Imperative</h2>
+            <p>The next frontier for hospital automation is not more sophisticated individual systems — it is orchestration. A fall detection system that cannot communicate its findings to an electronic health record, or that generates alerts in a format incompatible with the nursing station's existing software, creates integration overhead that negates its operational value.</p>
+            <p>City General's technology roadmap prioritises HL7 FHIR compliance for all new system integrations, ensuring that FallGuard's alert data, confidence scores, and event timestamps can be incorporated into patient records without manual transcription — closing the loop between detection, response, and documentation.</p>
+            <p>Hospital automation, done right, does not make care impersonal. It makes the personal parts of care possible.</p>
+
+        </div>
+    </div>
+
+    <div class="blog-footer">
+        © 2025 <span style="color:var(--green)">City General Hospital</span> · Innovation & Digital Health Division
+    </div>
+
+</body>
+</html>

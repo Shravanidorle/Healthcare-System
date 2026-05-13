@@ -1,0 +1,210 @@
+<!-- ── EVENTS SECTION ──────────────────────────────────────── -->
+<section id="events" class="events-section sticky-section">
+    <div class="events-container fade-in-up">
+        
+        <h2 class="section-title">Hospital Events</h2>
+        <p class="section-subtitle">Join us in our mission to promote health, safety, and innovation.</p>
+
+        <div class="events-list">
+            
+            <!-- Event 1 -->
+            <div class="event-row">
+                <div class="event-date">
+                    <span class="date-day">15</span>
+                    <span class="date-month">OCT</span>
+                </div>
+                <div class="event-info">
+                    <h3 class="event-title">National AI Safety Seminar</h3>
+                    <p class="event-desc">Discover how AI is reshaping fall prevention and patient safety protocols.</p>
+                </div>
+                <div class="event-cta">
+                    <button class="btn-register" onclick="openEventModal('National AI Safety Seminar')">Register</button>
+                </div>
+            </div>
+
+            <!-- Event 2 -->
+            <div class="event-row">
+                <div class="event-date">
+                    <span class="date-day">22</span>
+                    <span class="date-month">NOV</span>
+                </div>
+                <div class="event-info">
+                    <h3 class="event-title">Free Cardiac Screening</h3>
+                    <p class="event-desc">A community initiative providing comprehensive heart health assessments.</p>
+                </div>
+                <div class="event-cta">
+                    <button class="btn-register" onclick="openEventModal('Free Cardiac Screening')">Register</button>
+                </div>
+            </div>
+
+            <!-- Event 3 -->
+            <div class="event-row">
+                <div class="event-date">
+                    <span class="date-day">05</span>
+                    <span class="date-month">DEC</span>
+                </div>
+                <div class="event-info">
+                    <h3 class="event-title">FallGuard Tech Demonstration</h3>
+                    <p class="event-desc">Live demonstration of our privacy-first skeletal tracking surveillance system.</p>
+                </div>
+                <div class="event-cta">
+                    <button class="btn-register" onclick="openEventModal('FallGuard Tech Demonstration')">Register</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ── REGISTRATION MODAL (inside section, position:fixed — no layout impact) ── -->
+
+    <!-- Backdrop -->
+    <div id="event-modal-overlay" onclick="closeEventModal()"></div>
+
+    <!-- Modal box -->
+    <div id="event-modal" role="dialog" aria-modal="true">
+
+        <div class="evtm-header">
+            <div>
+                <div class="evtm-tag">Event Registration</div>
+                <h2 class="evtm-title" id="modal-event-title"></h2>
+            </div>
+            <button class="evtm-close" onclick="closeEventModal()" aria-label="Close">✕</button>
+        </div>
+
+        <form id="event-reg-form" onsubmit="submitEventForm(event)" novalidate>
+            <input type="hidden" id="reg-event-name" name="event_name">
+
+            <div class="evtm-row">
+                <div class="evtm-field">
+                    <label class="evtm-lbl">Full Name <span class="req">*</span></label>
+                    <input class="evtm-inp" type="text" name="full_name" id="reg-full-name" placeholder="Priya Sharma" required>
+                </div>
+                <div class="evtm-field">
+                    <label class="evtm-lbl">Email Address <span class="req">*</span></label>
+                    <input class="evtm-inp" type="email" name="email" id="reg-email" placeholder="you@email.com" required>
+                </div>
+            </div>
+
+            <div class="evtm-row">
+                <div class="evtm-field">
+                    <label class="evtm-lbl">Phone Number <span class="req">*</span></label>
+                    <input class="evtm-inp" type="tel" name="phone" id="reg-phone" placeholder="+91 98765 43210" required>
+                </div>
+                <div class="evtm-field">
+                    <label class="evtm-lbl">Age</label>
+                    <input class="evtm-inp" type="number" name="age" id="reg-age" placeholder="28" min="1" max="120">
+                </div>
+            </div>
+
+            <div class="evtm-row">
+                <div class="evtm-field">
+                    <label class="evtm-lbl">Gender</label>
+                    <select class="evtm-inp evtm-sel" name="gender" id="reg-gender">
+                        <option value="">Prefer not to say</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Non-binary">Non-binary</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="evtm-field">
+                    <label class="evtm-lbl">Occupation</label>
+                    <input class="evtm-inp" type="text" name="occupation" id="reg-occupation" placeholder="Doctor, Nurse, Student…">
+                </div>
+            </div>
+
+            <div class="evtm-field evtm-full">
+                <label class="evtm-lbl">Additional Notes</label>
+                <textarea class="evtm-inp evtm-textarea" name="message" id="reg-message"
+                    placeholder="Questions, dietary requirements, accessibility needs…"></textarea>
+            </div>
+
+            <div id="reg-status" class="evtm-status" style="display:none;"></div>
+
+            <button type="submit" id="reg-submit-btn" class="evtm-submit">
+                ✓ &nbsp; Confirm Registration
+            </button>
+        </form>
+    </div>
+
+</section>
+
+<script>
+/* ── Event Registration Modal ─────────────────────────────── */
+function openEventModal(eventName) {
+    document.getElementById('reg-event-name').value = eventName;
+    document.getElementById('modal-event-title').textContent = eventName;
+    document.getElementById('event-reg-form').reset();
+    // restore hidden field after reset
+    document.getElementById('reg-event-name').value = eventName;
+    const status = document.getElementById('reg-status');
+    status.style.display = 'none';
+    status.className = 'evtm-status';
+    const btn = document.getElementById('reg-submit-btn');
+    btn.disabled = false;
+    btn.textContent = '✓  Confirm Registration';
+    btn.className = 'evtm-submit';
+    document.getElementById('event-modal-overlay').classList.add('open');
+    document.getElementById('event-modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeEventModal() {
+    document.getElementById('event-modal-overlay').classList.remove('open');
+    document.getElementById('event-modal').classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeEventModal();
+});
+
+async function submitEventForm(e) {
+    e.preventDefault();
+    const btn    = document.getElementById('reg-submit-btn');
+    const status = document.getElementById('reg-status');
+
+    btn.disabled = true;
+    btn.textContent = '⏳  Submitting…';
+
+    const payload = {
+        event_name : document.getElementById('reg-event-name').value,
+        full_name  : document.getElementById('reg-full-name').value,
+        email      : document.getElementById('reg-email').value,
+        phone      : document.getElementById('reg-phone').value,
+        age        : document.getElementById('reg-age').value,
+        gender     : document.getElementById('reg-gender').value,
+        occupation : document.getElementById('reg-occupation').value,
+        message    : document.getElementById('reg-message').value,
+    };
+
+    try {
+        const res  = await fetch('/register-event', {
+            method : 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body   : JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        status.style.display = 'block';
+        if (data.success) {
+            status.className = 'evtm-status evtm-status-ok';
+            status.innerHTML = '✅ &nbsp;<strong>Registration Confirmed!</strong><br>'
+                + '<span style="opacity:0.85">' + data.message + '</span>';
+            btn.className    = 'evtm-submit evtm-submit-done';
+            btn.textContent  = '✓  Registered';
+        } else {
+            status.className = 'evtm-status evtm-status-err';
+            status.textContent = '⚠️  ' + data.message;
+            btn.disabled = false;
+            btn.textContent = '✓  Confirm Registration';
+        }
+    } catch (err) {
+        status.style.display = 'block';
+        status.className = 'evtm-status evtm-status-err';
+        status.textContent = '⚠️  Network error. Please try again.';
+        btn.disabled = false;
+        btn.textContent = '✓  Confirm Registration';
+    }
+}
+</script>

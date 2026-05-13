@@ -2,6 +2,13 @@
    layout.css — Header, Drawer, Footer, Main grid
    ============================================================ */
 
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
 /* ── HEADER ── */
 header {
   background: var(--surface);
@@ -545,7 +552,7 @@ header {
 }
 
 /* ── MAIN GRID ── */
-.main {
+.main { flex: 1; display: flex; 
   flex: 1;
   display: grid;
   grid-template-columns: 1fr 305px;
@@ -603,7 +610,7 @@ footer {
 
 /* ── RESPONSIVE ── */
 @media (max-width: 980px) {
-  .main {
+  .main { flex: 1; display: flex; 
     grid-template-columns: 1fr;
     padding: 13px 15px;
   }

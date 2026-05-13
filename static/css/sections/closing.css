@@ -1,0 +1,64 @@
+/* ==========================================================================
+   Closing Statement Section
+   ========================================================================== */
+
+.closing-section {
+    width: 100%;
+    background-color: var(--bg, #0f0f0f);
+    padding: 100px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.closing-container {
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+}
+
+.closing-hero-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4.2rem);
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    /* High-impact neon green glow */
+    text-shadow: 0 0 30px rgba(0, 255, 136, 0.4);
+}
+
+.closing-quote {
+    font-family: var(--sans, sans-serif);
+    font-size: clamp(1.2rem, 3vw, 1.6rem);
+    font-style: italic;
+    color: var(--muted, #a0a0a0);
+    margin: 0;
+    font-weight: 300;
+}
+
+.closing-thank-you {
+    font-family: var(--mono, monospace);
+    font-size: 1rem;
+    color: var(--green, #00ff88);
+    margin: 15px 0 0 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Scroll Animation Hooks */
+.closing-fade {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 1s cubic-bezier(0.2, 0.8, 0.2, 1), transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.closing-fade.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}

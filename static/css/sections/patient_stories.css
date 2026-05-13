@@ -1,0 +1,206 @@
+/* ==========================================================================
+   Patient Stories Section
+   ========================================================================== */
+
+.patient-stories-section {
+    background: var(--bg, #0f0f0f);
+    padding: 80px 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    overflow: hidden; /* Prevent horizontal scroll from slide animations */
+}
+
+.stories-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.patient-stories-section .section-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 2.5rem;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.patient-stories-section .section-subtitle {
+    font-family: var(--sans, sans-serif);
+    color: var(--muted, #a0a0a0);
+    text-align: center;
+    margin-bottom: 50px;
+    font-size: 1.1rem;
+}
+
+.stories-list {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+/* Wide Card Design */
+.story-card {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    background: rgba(20, 20, 20, 0.4); /* Semi-transparent dark background */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.story-card:hover {
+    border-color: rgba(0, 255, 136, 0.3);
+    transform: translateY(-3px);
+}
+
+.story-img-container {
+    width: 100%;
+    height: 100%;
+}
+
+.story-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(80%) contrast(1.2);
+    transition: filter 0.3s ease;
+}
+
+.story-card:hover .story-img {
+    filter: grayscale(0%) contrast(1.1);
+}
+
+.story-content {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* perfectly centered vertically against the image */
+    position: relative;
+}
+
+/* Accent Quote Icon */
+.quote-icon {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 4rem;
+    color: var(--green, #00ff88);
+    line-height: 1;
+    opacity: 0.2;
+}
+
+.story-quote {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.4rem;
+    font-style: italic;
+    color: #ffffff;
+    margin: 0 0 15px 0;
+    line-height: 1.5;
+    position: relative;
+    z-index: 2;
+}
+
+.story-desc {
+    font-family: var(--sans, sans-serif);
+    color: var(--muted, #a0a0a0);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0 0 20px 0;
+    max-width: 90%;
+}
+
+.story-author {
+    font-family: var(--mono, monospace);
+    font-size: 0.9rem;
+    color: var(--green, #00ff88);
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+.story-ward {
+    color: #ffffff;
+    font-weight: normal;
+}
+
+/* Scroll Animations */
+.is-visible .slide-in-left {
+    animation: slideLeft 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.is-visible .slide-in-right {
+    animation: slideRight 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.slide-in-left, .slide-in-right {
+    opacity: 0;
+}
+
+@keyframes slideLeft {
+    from { opacity: 0; transform: translateX(-50px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideRight {
+    from { opacity: 0; transform: translateX(50px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .story-card {
+        grid-template-columns: 1fr;
+    }
+    
+    .story-img-container {
+        height: 250px;
+    }
+    
+    .story-content {
+        padding: 30px 20px;
+    }
+    
+    .quote-icon {
+        top: 10px;
+        right: 20px;
+    }
+}
+
+/* ── Read Full Story Button ── */
+.story-read-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 18px;
+    font-family: var(--mono, monospace);
+    font-size: 0.78rem;
+    letter-spacing: 1px;
+    text-decoration: none;
+    color: var(--green, #00e57a);
+    border: 1px solid rgba(0, 229, 122, 0.3);
+    padding: 10px 18px;
+    border-radius: 8px;
+    background: rgba(0, 229, 122, 0.05);
+    transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+.story-read-btn:hover {
+    background: rgba(0, 229, 122, 0.12);
+    box-shadow: 0 0 14px rgba(0, 229, 122, 0.2);
+    transform: translateX(4px);
+}
+
+/* Blue variant for Story 2 */
+.story-read-btn--blue {
+    color: var(--blue, #3db8ff);
+    border-color: rgba(61, 184, 255, 0.3);
+    background: rgba(61, 184, 255, 0.05);
+}
+.story-read-btn--blue:hover {
+    background: rgba(61, 184, 255, 0.12);
+    box-shadow: 0 0 14px rgba(61, 184, 255, 0.2);
+}
+

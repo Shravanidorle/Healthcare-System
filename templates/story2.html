@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mr. Patel's Story — FallGuard AI | City General Hospital</title>
+    <meta name="description" content="How FallGuard's privacy-first skeletal monitoring gave Mr. Patel's family peace of mind while protecting him around the clock in the Neurology ICU.">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}?v=4">
+    <style>
+        body { background: var(--bg); color: var(--text); font-family: var(--sans); margin: 0; padding: 0; line-height: 1.7; }
+
+        nav {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+            height: 70px; border-bottom: 1px solid var(--border);
+            padding: 0 50px; display: flex; align-items: center;
+            justify-content: space-between; box-sizing: border-box;
+            background: rgba(7,11,15,0.93); backdrop-filter: blur(14px);
+        }
+        .nav-logo { font-family: var(--mono); font-weight: 700; font-size: 1.05rem; display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
+        .nav-links a { color: var(--text); text-decoration: none; margin-left: 30px; font-size: 0.82rem; font-family: var(--mono); transition: color 0.2s; letter-spacing: 1px; }
+        .nav-links a:hover { color: var(--blue); }
+
+        /* Hero — blue accent for neurology */
+        .story-hero {
+            margin-top: 70px; min-height: 52vh;
+            display: flex; align-items: flex-end;
+            position: relative; overflow: hidden;
+            background: linear-gradient(160deg, #070b0f 0%, #07101a 60%, #070b0f 100%);
+            border-bottom: 1px solid var(--border); padding: 0 0 60px;
+        }
+        .story-hero-img {
+            position: absolute; inset: 0;
+            background-image: url("{{ url_for('static', filename='images/story2.png') }}");
+            background-size: cover; background-position: center;
+            opacity: 0.17; filter: grayscale(50%);
+        }
+        .story-hero-grad {
+            position: absolute; inset: 0;
+            background: linear-gradient(to bottom, rgba(7,11,15,0.3) 0%, rgba(7,11,15,0.97) 100%);
+        }
+        .story-hero-content { position: relative; z-index: 2; max-width: 1200px; margin: 0 auto; padding: 0 40px; width: 100%; }
+        .story-cat {
+            display: inline-flex; align-items: center; gap: 8px;
+            font-family: var(--mono); font-size: 0.7rem; letter-spacing: 3px;
+            text-transform: uppercase; color: var(--blue);
+            border: 1px solid rgba(61,184,255,0.3); padding: 6px 16px;
+            border-radius: 20px; background: rgba(61,184,255,0.07); margin-bottom: 24px;
+        }
+        .cat-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.8s infinite; }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.35} }
+        .story-hero h1 {
+            font-family: var(--sans); font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 800; color: #fff; line-height: 1.15;
+            margin: 0 0 18px; letter-spacing: -1.5px;
+        }
+        .story-hero h1 span { color: var(--blue); }
+        .story-meta { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); letter-spacing: 1px; }
+        .story-meta b { color: var(--blue); }
+
+        /* Pull quote — blue accent */
+        .pull-quote-wrap { background: rgba(61,184,255,0.05); border-left: 4px solid var(--blue); border-radius: 0 12px 12px 0; padding: 28px 32px; margin: 48px 0; }
+        .pull-quote { font-family: var(--sans); font-size: 1.3rem; font-style: italic; font-weight: 600; color: #c8e8ff; line-height: 1.6; margin: 0 0 12px; }
+        .pull-attr { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 2px; color: var(--blue); text-transform: uppercase; }
+
+        /* Article layout */
+        .story-wrap { max-width: 1200px; margin: 0 auto; padding: 60px 40px 100px; display: grid; grid-template-columns: 1fr 320px; gap: 64px; align-items: start; }
+        .story-body h2 {
+            font-family: var(--sans); font-size: 1.45rem; font-weight: 700;
+            color: #fff; margin: 48px 0 16px; letter-spacing: -0.4px;
+            padding-left: 14px; border-left: 3px solid var(--blue);
+        }
+        .story-body p { font-size: 1.05rem; line-height: 1.88; color: var(--text); margin-bottom: 20px; }
+        .story-body strong { color: #c8e8ff; }
+
+        /* Sidebar */
+        .story-sidebar { position: sticky; top: 90px; }
+        .sidebar-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 14px; padding: 26px 22px; margin-bottom: 18px; }
+        .sc-label { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 2.5px; color: var(--muted); text-transform: uppercase; margin-bottom: 16px; }
+
+        /* Timeline — blue dots */
+        .tl { list-style: none; margin: 0; padding: 0; position: relative; }
+        .tl::before { content:''; position:absolute; left:6px; top:4px; bottom:4px; width:1px; background: linear-gradient(to bottom, var(--blue), transparent); }
+        .tl li { padding: 0 0 20px 22px; position: relative; }
+        .tl li::before { content:''; position:absolute; left:0; top:5px; width:13px; height:13px; border-radius:50%; background:var(--blue); box-shadow:0 0 8px rgba(61,184,255,0.6); }
+        .tl li:last-child { padding-bottom: 0; }
+        .tl-t { font-family: var(--mono); font-size: 0.7rem; color: var(--blue); letter-spacing: 1px; margin-bottom: 3px; }
+        .tl-e { font-size: 0.88rem; color: var(--text); }
+
+        /* Stats */
+        .stat-item { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+        .stat-item:last-child { border-bottom: none; }
+        .stat-icon { font-size: 1.4rem; flex-shrink: 0; }
+        .stat-val { font-family: var(--mono); font-size: 1.15rem; color: var(--blue); font-weight: 700; }
+        .stat-desc { font-size: 0.78rem; color: var(--muted); margin-top: 1px; }
+
+        /* Callout — blue */
+        .callout { background: rgba(61,184,255,0.05); border: 1px solid rgba(61,184,255,0.2); border-radius: 10px; padding: 20px 24px; margin: 32px 0; }
+        .callout p { margin: 0; color: #c8e8ff; font-size: 0.97rem; }
+        .callout-lbl { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 2px; color: var(--blue); margin-bottom: 8px; text-transform: uppercase; }
+
+        /* Privacy feature list */
+        .privacy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 28px 0; }
+        .priv-item { background: var(--surface); border: 1px solid var(--border2); border-radius: 10px; padding: 16px; }
+        .priv-icon { font-size: 1.3rem; margin-bottom: 8px; }
+        .priv-title { font-family: var(--mono); font-size: 0.72rem; color: var(--blue); letter-spacing: 1px; margin-bottom: 4px; }
+        .priv-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+
+        /* Back btn */
+        .back-btn {
+            display: inline-flex; align-items: center; gap: 9px;
+            font-family: var(--mono); font-size: 0.8rem; letter-spacing: 1px;
+            text-decoration: none; color: var(--blue);
+            border: 1px solid rgba(61,184,255,0.28); padding: 11px 20px;
+            border-radius: 8px; transition: all 0.2s; margin-bottom: 44px;
+            background: rgba(61,184,255,0.04);
+        }
+        .back-btn:hover { background: rgba(61,184,255,0.1); box-shadow: 0 0 14px rgba(61,184,255,0.18); }
+
+        .pg-footer { border-top: 1px solid var(--border); padding: 28px 20px; text-align: center; font-family: var(--mono); font-size: 0.72rem; color: var(--muted); letter-spacing: 1px; }
+
+        @media (max-width: 960px) {
+            .story-wrap { grid-template-columns: 1fr; gap: 36px; padding: 40px 24px 80px; }
+            .story-sidebar { position: static; }
+            .privacy-grid { grid-template-columns: 1fr; }
+            nav { padding: 0 20px; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a class="nav-logo" href="/">
+            <span style="font-size:1.4rem">🏥</span>
+            CITY GENERAL <span style="color:var(--green)">&nbsp;HOSPITAL</span>
+        </a>
+        <div class="nav-links">
+            <a href="/">HOME</a>
+            <a href="/about">TECHNOLOGY</a>
+            <a href="/contact">APPOINTMENTS</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <div class="story-hero">
+        <div class="story-hero-img"></div>
+        <div class="story-hero-grad"></div>
+        <div class="story-hero-content">
+            <div class="story-cat"><div class="cat-dot"></div> Patient Story · Neurology ICU</div>
+            <h1>"Peace of Mind for<br><span>the Whole Family."</span></h1>
+            <div class="story-meta">
+                <b>Mr. Ramesh Patel (Family Account)</b> &nbsp;·&nbsp; Age 68 &nbsp;·&nbsp; Neurology ICU &nbsp;·&nbsp; April 2024
+            </div>
+        </div>
+    </div>
+
+    <!-- ARTICLE + SIDEBAR -->
+    <div class="story-wrap">
+
+        <!-- LEFT — BODY -->
+        <div class="story-body">
+            <a href="/" class="back-btn">← Back to Home</a>
+
+            <div class="pull-quote-wrap">
+                <p class="pull-quote">"Knowing there is a privacy-first AI watching over my father gave our family incredible peace of mind."</p>
+                <div class="pull-attr">— Rohan Patel, Son of Mr. Ramesh Patel</div>
+            </div>
+
+            <h2>When Every Night Felt Like a Risk</h2>
+            <p>Mr. Ramesh Patel, 68, was admitted to City General Hospital's Neurology ICU in April 2024 following a mild ischaemic stroke. While his prognosis was optimistic — the stroke had been caught early and treated within the golden hour — the recovery phase presented its own set of challenges. Post-stroke patients frequently experience episodes of dizziness, spatial disorientation, and sudden weakness in affected limbs, making unsupported movement during the night hours particularly dangerous.</p>
+            <p>His son Rohan, who lives in Bangalore and could not be present full-time, described the first few days as <strong>"a constant low-level anxiety."</strong> <strong>"Dad has always been stubborn about asking for help,"</strong> he explained. <strong>"We knew he'd try to get up on his own in the middle of the night. That was what worried us most."</strong></p>
+
+            <h2>The Privacy Question</h2>
+            <p>When the ICU nursing team informed the Patel family that FallGuard AI monitoring would be active in Mr. Patel's room, Rohan's first reaction was hesitation. His father, a retired schoolteacher with a strong sense of personal dignity, had always been private. The idea of video surveillance — even in a clinical setting — felt intrusive.</p>
+            <p>The nursing team arranged a brief explanation of exactly what FallGuard does and does not capture. Using the dashboard's Privacy Mode as a demonstration, they showed the family the skeletal wireframe view that monitoring staff actually see: a black canvas, cyan joint markers, and no identifiable features whatsoever.</p>
+
+            <div class="privacy-grid">
+                <div class="priv-item">
+                    <div class="priv-icon">🦴</div>
+                    <div class="priv-title">Skeletal Only</div>
+                    <div class="priv-desc">Staff see only a wireframe — no face, no body, no identifiers.</div>
+                </div>
+                <div class="priv-item">
+                    <div class="priv-icon">🔒</div>
+                    <div class="priv-title">No Video Stored</div>
+                    <div class="priv-desc">Raw camera frames are never saved, transmitted, or accessible.</div>
+                </div>
+                <div class="priv-item">
+                    <div class="priv-icon">📍</div>
+                    <div class="priv-title">On-Device Only</div>
+                    <div class="priv-desc">All processing happens locally — no cloud, no external servers.</div>
+                </div>
+                <div class="priv-item">
+                    <div class="priv-icon">🛡️</div>
+                    <div class="priv-title">AES-256 Encrypted</div>
+                    <div class="priv-desc">Event logs are encrypted at rest with military-grade AES-256-GCM.</div>
+                </div>
+            </div>
+
+            <p><strong>"Once they showed us what it actually looked like,"</strong> Rohan said, <strong>"my dad actually laughed. He said it looked like a video game. He didn't mind at all after that."</strong></p>
+
+            <h2>The Alert That Mattered Most</h2>
+            <p>On the ninth day of admission, at 3:44 AM, Mr. Patel attempted to stand unaided to use the bathroom — something his physiotherapist had specifically advised against without supervision. FallGuard's model detected the rising motion, the shift in centre of gravity, and the micro-tremor pattern in his left-side landmarks consistent with post-stroke weakness under load.</p>
+            <p>The confidence score hit 88.7% across the required confirmation window. The alert fired. The on-call ICU nurse reached Mr. Patel before he had fully stood, providing the support that prevented what could have been a severe secondary fall.</p>
+
+            <div class="callout">
+                <div class="callout-lbl">ICU Nurse — Night Shift</div>
+                <p>"The alert included the room number and confidence level. I was there in under a minute. Mr. Patel was surprised to see me — he hadn't pressed any button. When I explained the system had detected him, he went very quiet, then said: 'So someone was watching out for me all along.' That stayed with me."</p>
+            </div>
+
+            <h2>Recovery and Discharge</h2>
+            <p>Mr. Patel was discharged after 14 days with a positive rehabilitation prognosis. His neurologist noted that the absence of secondary falls during recovery was a significant factor in his smooth rehabilitation trajectory. Falls during the acute post-stroke window can reset neurological recovery progress substantially.</p>
+            <p>For the Patel family, FallGuard changed how they thought about hospital monitoring entirely. Rohan wrote to the hospital trust after discharge: <em>"Before this, I thought surveillance meant someone watching my father like he was a subject. What FallGuard did was the opposite — it watched over him, the way family would if we could all be there at 3 AM. It protected his dignity at the same time. That combination is something I didn't know was possible."</em></p>
+
+            <h2>Why This Story Matters for Neurology Patients</h2>
+            <p>Post-stroke patients represent one of the highest-risk populations for in-hospital falls. Neurological deficits affecting balance, proprioception, and spatial awareness make unsupported ambulation acutely dangerous, particularly in the first two weeks post-event. Yet this is also the population most likely to attempt independent movement — driven by the same sense of autonomy that characterised their pre-stroke lives.</p>
+            <p>FallGuard's continuous monitoring closes this gap without requiring behavioural change from the patient. It does not ask Mr. Patel to press a button, call out, or wait. It simply watches — invisibly, respectfully, and with precision — and acts when the data says the risk is real.</p>
+
+            <div class="callout">
+                <div class="callout-lbl">Clinical Outcome</div>
+                <p>Attempted unsupported ambulation intercepted at 3:44 AM. No fall. No secondary neurological trauma. Discharged on schedule with positive rehabilitation prognosis.</p>
+            </div>
+
+        </div>
+
+        <!-- RIGHT — SIDEBAR -->
+        <aside class="story-sidebar">
+
+            <div class="sidebar-card">
+                <div class="sc-label">Event Timeline</div>
+                <ul class="tl">
+                    <li>
+                        <div class="tl-t">03:44:11 AM</div>
+                        <div class="tl-e">Rising motion and centre-of-gravity shift detected</div>
+                    </li>
+                    <li>
+                        <div class="tl-t">03:44:13 AM</div>
+                        <div class="tl-e">Left-limb tremor pattern flagged by LSTM layer</div>
+                    </li>
+                    <li>
+                        <div class="tl-t">03:44:14 AM</div>
+                        <div class="tl-e">Alert fired at 88.7% confidence — ICU station + mobile</div>
+                    </li>
+                    <li>
+                        <div class="tl-t">03:44:58 AM</div>
+                        <div class="tl-e">ICU nurse provides support — ambulation safely assisted</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar-card">
+                <div class="sc-label">Key Figures</div>
+                <div class="stat-item">
+                    <div class="stat-icon">⚡</div>
+                    <div>
+                        <div class="stat-val">3 s</div>
+                        <div class="stat-desc">Detection to alert</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">🏃</div>
+                    <div>
+                        <div class="stat-val">44 s</div>
+                        <div class="stat-desc">ICU nurse response</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">📊</div>
+                    <div>
+                        <div class="stat-val">88.7%</div>
+                        <div class="stat-desc">AI confidence score</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">✅</div>
+                    <div>
+                        <div class="stat-val">0</div>
+                        <div class="stat-desc">Falls sustained</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-card">
+                <div class="sc-label">Patient Profile</div>
+                <div class="stat-item">
+                    <div class="stat-icon">👤</div>
+                    <div>
+                        <div class="stat-val" style="font-size:0.9rem">Mr. Ramesh Patel</div>
+                        <div class="stat-desc">Age 68 · Post-ischaemic stroke</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">🧠</div>
+                    <div>
+                        <div class="stat-val" style="font-size:0.9rem">Neurology ICU</div>
+                        <div class="stat-desc">FallGuard AI Protected · 24/7</div>
+                    </div>
+                </div>
+            </div>
+
+        </aside>
+    </div>
+
+    <div class="pg-footer">© 2025 <span style="color:var(--green)">City General Hospital</span> · Patient Stories · FallGuard AI Safety Division</div>
+
+</body>
+</html>

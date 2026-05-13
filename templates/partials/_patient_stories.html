@@ -1,0 +1,43 @@
+<section id="stories" class="patient-stories-section sticky-section">
+    <div class="stories-container">
+        
+        <h2 class="section-title fade-in-up">Patient Stories</h2>
+        <p class="section-subtitle fade-in-up">Real impact. Real lives saved by FallGuard AI.</p>
+
+        <div class="stories-list">
+            
+            <!-- Story 1 (Slide from Left) -->
+            <div class="story-card slide-in-left">
+                <div class="story-img-container">
+                    <img src="{{ url_for('static', filename='images/story1.png') }}" alt="Nurse helping elderly patient who fell" class="story-img">
+                </div>
+                <div class="story-content">
+                    <div class="quote-icon">"</div>
+                    <blockquote class="story-quote">
+                        The alert reached the nurse in seconds. If it weren't for FallGuard, my recovery would have been much longer.
+                    </blockquote>
+                    <p class="story-desc">The AI surveillance system detected an irregular movement pattern, alerting staff before a major fall occurred.</p>
+                    <div class="story-author">— Mrs. Sharma, <span class="story-ward">Geriatric Ward</span></div>
+                    <a href="/story/mrs-sharma-geriatric-ward" class="story-read-btn">Read Full Story →</a>
+                </div>
+            </div>
+
+            <!-- Story 2 (Slide from Right) -->
+            <div class="story-card slide-in-right">
+                <div class="story-img-container">
+                    <img src="{{ url_for('static', filename='images/story2.png') }}" alt="Digital privacy lock in hospital ward" class="story-img">
+                </div>
+                <div class="story-content">
+                    <div class="quote-icon">"</div>
+                    <blockquote class="story-quote">
+                        Knowing there is a privacy-first AI watching over my father gave our family incredible peace of mind.
+                    </blockquote>
+                    <p class="story-desc">The skeletal masking feature ensured complete privacy while maintaining 24/7 proactive monitoring.</p>
+                    <div class="story-author">— Mr. Patel, <span class="story-ward">Neurology ICU</span></div>
+                    <a href="/story/mr-patel-neurology-icu" class="story-read-btn story-read-btn--blue">Read Full Story →</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

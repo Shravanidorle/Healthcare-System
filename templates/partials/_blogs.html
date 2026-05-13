@@ -1,0 +1,53 @@
+<section id="blogs" class="blogs-section sticky-section">
+    <div class="blogs-container fade-in-up">
+        
+        <h2 class="section-title">Our Blogs &amp; Research</h2>
+        <p class="section-subtitle">Discover the latest advancements in AI-driven healthcare and patient safety.</p>
+
+        <div class="blogs-grid">
+            
+            <!-- Blog Card 1 -->
+            <div class="blog-card">
+                <div class="blog-img-wrapper">
+                    <img src="{{ url_for('static', filename='images/blog1.png') }}" alt="AI Research in Healthcare" class="blog-img">
+                    <div class="glass-overlay"></div>
+                    <span class="blog-tag">AI Research</span>
+                </div>
+                <div class="blog-content">
+                    <h3 class="blog-title">How CNN+LSTM Models are Revolutionizing Ward Safety</h3>
+                    <p class="blog-excerpt">Exploring the intersection of deep learning and real-time patient monitoring for fall prevention.</p>
+                    <a href="/blog/cnn-lstm-ward-safety" class="blog-btn">Read More →</a>
+                </div>
+            </div>
+
+            <!-- Blog Card 2 -->
+            <div class="blog-card">
+                <div class="blog-img-wrapper">
+                    <img src="{{ url_for('static', filename='images/blog2.png') }}" alt="Patient Safety Surveillance" class="blog-img">
+                    <div class="glass-overlay"></div>
+                    <span class="blog-tag">Patient Safety</span>
+                </div>
+                <div class="blog-content">
+                    <h3 class="blog-title">The Ethics of Privacy-First Surveillance</h3>
+                    <p class="blog-excerpt">Why skeletal tracking and visual masking are essential for ethical monitoring in modern hospitals.</p>
+                    <a href="/blog/privacy-first-surveillance" class="blog-btn">Read More →</a>
+                </div>
+            </div>
+
+            <!-- Blog Card 3 -->
+            <div class="blog-card">
+                <div class="blog-img-wrapper">
+                    <img src="{{ url_for('static', filename='images/blog3.png') }}" alt="Future of Hospital Innovation" class="blog-img">
+                    <div class="glass-overlay"></div>
+                    <span class="blog-tag">Innovation</span>
+                </div>
+                <div class="blog-content">
+                    <h3 class="blog-title">Future of Hospital Automation</h3>
+                    <p class="blog-excerpt">How smart wards and automated alert systems are decreasing nurse fatigue and saving lives.</p>
+                    <a href="/blog/future-hospital-automation" class="blog-btn">Read More →</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

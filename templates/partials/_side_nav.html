@@ -1,0 +1,140 @@
+<!-- Side Navigation Dots -->
+<nav class="side-nav" aria-label="Section Navigation">
+    <ul class="side-nav__list">
+        <li class="side-nav__item">
+            <a href="#hero" class="side-nav__dot active" data-label="Home" aria-label="Go to Home section"></a>
+        </li>
+        <li class="side-nav__item">
+            <a href="#departments" class="side-nav__dot" data-label="Departments" aria-label="Go to Departments section"></a>
+        </li>
+        <li class="side-nav__item">
+            <a href="#support" class="side-nav__dot" data-label="Services" aria-label="Go to Support Services section"></a>
+        </li>
+        <li class="side-nav__item">
+            <a href="#surveillance" class="side-nav__dot" data-label="Surveillance" aria-label="Go to Surveillance section"></a>
+        </li>
+        <li class="side-nav__item">
+            <a href="#blogs" class="side-nav__dot" data-label="Blogs" aria-label="Go to Blogs section"></a>
+        </li>
+        <li class="side-nav__item">
+            <a href="#events" class="side-nav__dot" data-label="Events" aria-label="Go to Events section"></a>
+        </li>
+        <li class="side-nav__item">
+            <a href="#patient-stories" class="side-nav__dot" data-label="Stories" aria-label="Go to Patient Stories section"></a>
+        </li>
+    </ul>
+</nav>
+
+<style>
+    .side-nav {
+        position: fixed;
+        right: 24px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 999;
+        display: flex;
+        align-items: center;
+    }
+
+    .side-nav__list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        align-items: center;
+    }
+
+    .side-nav__item {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .side-nav__dot {
+        display: block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        text-decoration: none;
+        position: relative;
+    }
+
+    /* Tooltip label */
+    .side-nav__dot::before {
+        content: attr(data-label);
+        position: absolute;
+        right: calc(100% + 14px);
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(13, 18, 24, 0.85);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: #fff;
+        font-family: var(--mono, 'Space Mono', monospace);
+        font-size: 0.68rem;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        padding: 5px 10px;
+        border-radius: 4px;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+        transform: translateY(-50%) translateX(6px);
+    }
+
+    .side-nav__dot:hover::before,
+    .side-nav__dot.active::before {
+        opacity: 1;
+        transform: translateY(-50%) translateX(0);
+    }
+
+    .side-nav__dot:hover {
+        background: var(--green, #00e57a);
+        border-color: var(--green, #00e57a);
+        box-shadow: 0 0 10px var(--green, #00e57a);
+        transform: scale(1.4);
+    }
+
+    .side-nav__dot.active {
+        background: var(--green, #00e57a);
+        border-color: var(--green, #00e57a);
+        box-shadow: 0 0 12px var(--green, #00e57a);
+        width: 10px;
+        height: 10px;
+    }
+
+    @media (max-width: 768px) {
+        .side-nav {
+            display: none;
+        }
+    }
+</style>
+
+<script>
+    (function () {
+        const dots = document.querySelectorAll('.side-nav__dot');
+        const sectionIds = ['hero', 'departments', 'support', 'surveillance', 'blogs', 'events', 'patient-stories'];
+
+        function onScroll() {
+            const scrollY = window.scrollY + window.innerHeight / 2;
+            let activeIndex = 0;
+            sectionIds.forEach((id, i) => {
+                const el = document.getElementById(id);
+                if (el && el.offsetTop <= scrollY) activeIndex = i;
+            });
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === activeIndex);
+            });
+        }
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+    })();
+</script>

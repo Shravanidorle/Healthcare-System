@@ -45,6 +45,11 @@ body {
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
 }
 
 /* Scanline overlay */

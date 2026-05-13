@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mrs. Sharma's Story — FallGuard AI | City General Hospital</title>
+    <meta name="description" content="How FallGuard AI's real-time fall detection alert reached our nurse in seconds and helped Mrs. Sharma avoid a life-changing injury in the Geriatric Ward.">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}?v=4">
+    <style>
+        /* ── Base ── */
+        body { background: var(--bg); color: var(--text); font-family: var(--sans); margin: 0; padding: 0; line-height: 1.7; }
+
+        /* ── Nav ── */
+        nav {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+            height: 70px; border-bottom: 1px solid var(--border);
+            padding: 0 50px; display: flex; align-items: center;
+            justify-content: space-between; box-sizing: border-box;
+            background: rgba(7,11,15,0.93); backdrop-filter: blur(14px);
+        }
+        .nav-logo { font-family: var(--mono); font-weight: 700; font-size: 1.05rem; display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
+        .nav-links a { color: var(--text); text-decoration: none; margin-left: 30px; font-size: 0.82rem; font-family: var(--mono); transition: color 0.2s; letter-spacing: 1px; }
+        .nav-links a:hover { color: var(--green); }
+
+        /* ── Hero ── */
+        .story-hero {
+            margin-top: 70px;
+            min-height: 52vh;
+            display: flex; align-items: flex-end;
+            position: relative; overflow: hidden;
+            background: linear-gradient(160deg, #070b0f 0%, #091208 60%, #070b0f 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 0 0 60px;
+        }
+        .story-hero-img {
+            position: absolute; inset: 0;
+            background-image: url("{{ url_for('static', filename='images/story1.png') }}");
+            background-size: cover; background-position: center top;
+            opacity: 0.18;
+            filter: grayscale(60%);
+        }
+        .story-hero-grad {
+            position: absolute; inset: 0;
+            background: linear-gradient(to bottom, rgba(7,11,15,0.3) 0%, rgba(7,11,15,0.97) 100%);
+        }
+        .story-hero-content {
+            position: relative; z-index: 2;
+            max-width: 1200px; margin: 0 auto; padding: 0 40px; width: 100%;
+        }
+        .story-cat {
+            display: inline-flex; align-items: center; gap: 8px;
+            font-family: var(--mono); font-size: 0.7rem; letter-spacing: 3px;
+            text-transform: uppercase; color: var(--green);
+            border: 1px solid rgba(0,229,122,0.3); padding: 6px 16px;
+            border-radius: 20px; background: rgba(0,229,122,0.07); margin-bottom: 24px;
+        }
+        .cat-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); animation: blink 1.8s infinite; }
+        .story-hero h1 {
+            font-family: var(--sans); font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 800; color: #fff; line-height: 1.15;
+            margin: 0 0 18px; letter-spacing: -1.5px;
+        }
+        .story-hero h1 span { color: var(--green); }
+        .story-meta { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); letter-spacing: 1px; }
+        .story-meta b { color: var(--green); }
+
+        /* ── Pull quote ── */
+        .pull-quote-wrap { background: rgba(0,229,122,0.05); border-left: 4px solid var(--green); border-radius: 0 12px 12px 0; padding: 28px 32px; margin: 48px 0; }
+        .pull-quote { font-family: var(--sans); font-size: 1.3rem; font-style: italic; font-weight: 600; color: #d4fff0; line-height: 1.6; margin: 0 0 12px; }
+        .pull-attr { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 2px; color: var(--green); text-transform: uppercase; }
+
+        /* ── Article ── */
+        .story-wrap { max-width: 1200px; margin: 0 auto; padding: 60px 40px 100px; display: grid; grid-template-columns: 1fr 320px; gap: 64px; align-items: start; }
+        .story-body h2 {
+            font-family: var(--sans); font-size: 1.45rem; font-weight: 700;
+            color: #fff; margin: 48px 0 16px; letter-spacing: -0.4px;
+            padding-left: 14px; border-left: 3px solid var(--green);
+        }
+        .story-body p { font-size: 1.05rem; line-height: 1.88; color: var(--text); margin-bottom: 20px; }
+        .story-body strong { color: #c8fce4; }
+
+        /* ── Timeline sidebar ── */
+        .story-sidebar { position: sticky; top: 90px; }
+        .sidebar-card {
+            background: var(--surface); border: 1px solid var(--border2);
+            border-radius: 14px; padding: 26px 22px; margin-bottom: 18px;
+        }
+        .sc-label { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 2.5px; color: var(--muted); text-transform: uppercase; margin-bottom: 16px; }
+        .tl { list-style: none; margin: 0; padding: 0; position: relative; }
+        .tl::before { content:''; position:absolute; left:6px; top:4px; bottom:4px; width:1px; background: linear-gradient(to bottom, var(--green), transparent); }
+        .tl li { padding: 0 0 20px 22px; position: relative; }
+        .tl li::before { content:''; position:absolute; left:0; top:5px; width:13px; height:13px; border-radius:50%; background:var(--green); box-shadow:0 0 8px rgba(0,229,122,0.6); }
+        .tl li:last-child { padding-bottom: 0; }
+        .tl-t { font-family: var(--mono); font-size: 0.7rem; color: var(--green); letter-spacing: 1px; margin-bottom: 3px; }
+        .tl-e { font-size: 0.88rem; color: var(--text); }
+
+        /* Stats card */
+        .stat-item { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+        .stat-item:last-child { border-bottom: none; }
+        .stat-icon { font-size: 1.4rem; flex-shrink: 0; }
+        .stat-val { font-family: var(--mono); font-size: 1.15rem; color: var(--green); font-weight: 700; }
+        .stat-desc { font-size: 0.78rem; color: var(--muted); margin-top: 1px; }
+
+        /* ── Callout ── */
+        .callout { background: rgba(0,229,122,0.06); border: 1px solid rgba(0,229,122,0.2); border-radius: 10px; padding: 20px 24px; margin: 32px 0; }
+        .callout p { margin: 0; color: #c8fce4; font-size: 0.97rem; }
+        .callout-lbl { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 2px; color: var(--green); margin-bottom: 8px; text-transform: uppercase; }
+
+        /* ── Back btn ── */
+        .back-btn {
+            display: inline-flex; align-items: center; gap: 9px;
+            font-family: var(--mono); font-size: 0.8rem; letter-spacing: 1px;
+            text-decoration: none; color: var(--green);
+            border: 1px solid rgba(0,229,122,0.28); padding: 11px 20px;
+            border-radius: 8px; transition: all 0.2s; margin-bottom: 44px;
+            background: rgba(0,229,122,0.04);
+        }
+        .back-btn:hover { background: rgba(0,229,122,0.1); box-shadow: 0 0 14px rgba(0,229,122,0.18); }
+
+        /* ── Footer ── */
+        .pg-footer { border-top: 1px solid var(--border); padding: 28px 20px; text-align: center; font-family: var(--mono); font-size: 0.72rem; color: var(--muted); letter-spacing: 1px; }
+
+        @media (max-width: 960px) {
+            .story-wrap { grid-template-columns: 1fr; gap: 36px; padding: 40px 24px 80px; }
+            .story-sidebar { position: static; }
+            nav { padding: 0 20px; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a class="nav-logo" href="/">
+            <span style="font-size:1.4rem">🏥</span>
+            CITY GENERAL <span style="color:var(--green)">&nbsp;HOSPITAL</span>
+        </a>
+        <div class="nav-links">
+            <a href="/">HOME</a>
+            <a href="/about">TECHNOLOGY</a>
+            <a href="/contact">APPOINTMENTS</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <div class="story-hero">
+        <div class="story-hero-img"></div>
+        <div class="story-hero-grad"></div>
+        <div class="story-hero-content">
+            <div class="story-cat"><div class="cat-dot"></div> Patient Story · Geriatric Ward</div>
+            <h1>"The Alert Reached the Nurse<br><span>in Seconds."</span></h1>
+            <div class="story-meta">
+                <b>Mrs. Anita Sharma</b> &nbsp;·&nbsp; Age 74 &nbsp;·&nbsp; Geriatric Ward, Room 101 &nbsp;·&nbsp; March 2024
+            </div>
+        </div>
+    </div>
+
+    <!-- ARTICLE + SIDEBAR -->
+    <div class="story-wrap">
+
+        <!-- LEFT — STORY BODY -->
+        <div class="story-body">
+            <a href="/" class="back-btn">← Back to Home</a>
+
+            <div class="pull-quote-wrap">
+                <p class="pull-quote">"The alert reached the nurse in seconds. If it weren't for FallGuard, my recovery would have been much longer."</p>
+                <div class="pull-attr">— Mrs. Anita Sharma, Geriatric Ward</div>
+            </div>
+
+            <h2>A Routine Admission That Changed Everything</h2>
+            <p>Mrs. Anita Sharma, 74, was admitted to City General Hospital's Geriatric Ward in early March 2024 for post-operative recovery following a successful hip replacement surgery. While the surgery itself had gone smoothly, the recovery period carried significant risk — elderly patients recovering from orthopaedic procedures face a heightened chance of secondary falls, which can undo surgical outcomes and dramatically extend hospital stays.</p>
+            <p>Her family, particularly her daughter Meera, was deeply anxious. <strong>"My mother is fiercely independent,"</strong> Meera told our patient liaison team. <strong>"She would never call for help until it was too late. That was our biggest fear."</strong></p>
+
+            <h2>The Night FallGuard Intervened</h2>
+            <p>On the sixth night of her admission, at 2:17 AM, Mrs. Sharma attempted to reach her water bottle from the bedside table — a motion she had made hundreds of times throughout her life. But post-operative stiffness and mild disorientation from her pain medication made the movement dangerous. FallGuard's CNN+LSTM model, processing her skeletal data in real time, detected an abnormal torso angle and rapidly accelerating hip velocity inconsistent with intentional reaching.</p>
+            <p>Within <strong>2.1 seconds</strong> of the movement anomaly, the system's confidence score crossed the alert threshold for 8 consecutive detection windows. A silent alarm was sent simultaneously to the ward nursing station and the duty nurse's mobile terminal.</p>
+            <p>Ward Nurse Kavitha arrived at Room 101 within 47 seconds. She found Mrs. Sharma mid-way through a forward lean that, without intervention, would have resulted in a floor-level fall — likely causing a fracture to her recently repaired hip.</p>
+
+            <div class="callout">
+                <div class="callout-lbl">Nurse on Duty — Kavitha R.</div>
+                <p>"The alert was specific and immediate. It told me exactly which room, and I could see on the dashboard that the confidence was at 93.4%. I didn't have to guess — I just went. That's what made all the difference."</p>
+            </div>
+
+            <h2>Recovery Uninterrupted</h2>
+            <p>Because the intervention happened before a fall occurred, Mrs. Sharma's recovery timeline was completely unaffected. She was discharged ten days after admission, on the originally planned date, with full mobility targets met. Her orthopaedic consultant noted that a secondary fall at that stage of recovery would have required corrective surgery and an additional four to six weeks of inpatient rehabilitation.</p>
+            <p>For Mrs. Sharma, the experience left a lasting impression. <strong>"I didn't even know anyone was watching,"</strong> she said during her discharge interview. <strong>"Not in an uncomfortable way — I never felt observed. I just felt safe. That's a rare thing when you're in hospital at 2 in the morning."</strong></p>
+
+            <h2>What Privacy-First Monitoring Meant for the Sharma Family</h2>
+            <p>One of the family's initial concerns, raised during the admission process, was about camera-based monitoring. Meera had reservations about her mother being filmed overnight. The nursing team explained FallGuard's skeletal masking architecture — that no identifiable video was ever recorded, displayed, or stored, and that monitoring staff saw only a cyan wireframe overlay.</p>
+            <p>After Mrs. Sharma's safe discharge, Meera wrote to the hospital trust: <em>"I came in worried about cameras. I left grateful for them. The fact that it protected her dignity while keeping her safe — that combination is exactly what we needed."</em></p>
+
+            <div class="callout">
+                <div class="callout-lbl">Clinical Outcome</div>
+                <p>Secondary fall prevented. Recovery timeline intact. Discharged on schedule with full mobility. No corrective procedure required.</p>
+            </div>
+
+        </div>
+
+        <!-- RIGHT — SIDEBAR -->
+        <aside class="story-sidebar">
+
+            <div class="sidebar-card">
+                <div class="sc-label">Event Timeline</div>
+                <ul class="tl">
+                    <li>
+                        <div class="tl-t">02:17:04 AM</div>
+                        <div class="tl-e">Abnormal torso angle detected by CNN layer</div>
+                    </li>
+                    <li>
+                        <div class="tl-t">02:17:06 AM</div>
+                        <div class="tl-e">Confidence crosses 85% for 8 consecutive windows</div>
+                    </li>
+                    <li>
+                        <div class="tl-t">02:17:06 AM</div>
+                        <div class="tl-e">Silent alert sent to nursing station + mobile</div>
+                    </li>
+                    <li>
+                        <div class="tl-t">02:17:53 AM</div>
+                        <div class="tl-e">Nurse Kavitha arrives at Room 101</div>
+                    </li>
+                    <li>
+                        <div class="tl-t">02:18:10 AM</div>
+                        <div class="tl-e">Patient stabilised — fall prevented</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar-card">
+                <div class="sc-label">Key Figures</div>
+                <div class="stat-item">
+                    <div class="stat-icon">⚡</div>
+                    <div>
+                        <div class="stat-val">2.1 s</div>
+                        <div class="stat-desc">Detection to alert</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">🏃</div>
+                    <div>
+                        <div class="stat-val">47 s</div>
+                        <div class="stat-desc">Nurse response time</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">📊</div>
+                    <div>
+                        <div class="stat-val">93.4%</div>
+                        <div class="stat-desc">AI confidence score</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">✅</div>
+                    <div>
+                        <div class="stat-val">0</div>
+                        <div class="stat-desc">Injuries sustained</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-card">
+                <div class="sc-label">Patient Profile</div>
+                <div class="stat-item">
+                    <div class="stat-icon">👤</div>
+                    <div>
+                        <div class="stat-val" style="font-size:0.9rem">Mrs. Anita Sharma</div>
+                        <div class="stat-desc">Age 74 · Post hip-replacement</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">🏥</div>
+                    <div>
+                        <div class="stat-val" style="font-size:0.9rem">Room 101</div>
+                        <div class="stat-desc">Geriatric Ward · FallGuard protected</div>
+                    </div>
+                </div>
+            </div>
+
+        </aside>
+    </div>
+
+    <div class="pg-footer">© 2025 <span style="color:var(--green)">City General Hospital</span> · Patient Stories · FallGuard AI Safety Division</div>
+
+</body>
+</html>
