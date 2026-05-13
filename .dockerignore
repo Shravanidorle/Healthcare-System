@@ -1,7 +1,6 @@
 __pycache__
 .env
 *.csv
-*.mp4
 .git
 .vscode
 venv/

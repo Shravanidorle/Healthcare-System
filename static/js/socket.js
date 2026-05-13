@@ -6,7 +6,8 @@ var socket;
 
 socket = io({
   reconnection: true,
-  reconnectionDelay: 5000
+  reconnectionDelay: 1000,
+  reconnectionAttempts: Infinity
 });
 
 var fallCt = 0;

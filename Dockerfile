@@ -1,5 +1,4 @@
 # ── Base Image ───────────────────────────────────────────────────
-# bullseye is more stable than slim for CV/ML workloads
 FROM python:3.9-slim-bullseye
 
 # ── Python Optimizations ─────────────────────────────────────────
@@ -9,8 +8,8 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
 # ── System Dependencies ──────────────────────────────────────────
-# Only what opencv-python-headless + mediapipe actually need at runtime.
-# NO display/X11/GStreamer needed — we use the headless OpenCV build.
+# Minimum libs required by opencv-python-headless + mediapipe at runtime.
+# NO display/GStreamer/codec libs needed — headless build has no GUI.
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libgl1 \
     libglib2.0-0 \
@@ -20,11 +19,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 
-# ── Python Dependencies ──────────────────────────────────────────
-# Copy requirements first (Docker cache layer — only rebuilds if requirements change)
-COPY requirements.txt /app/
+# ── Install PyTorch CPU First ────────────────────────────────────
+# MUST use --index-url (not --extra-index-url) to force the CPU-only wheel.
+# --extra-index-url lets pip choose, and it picks the CUDA version from PyPI.
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+    pip install --no-cache-dir torch==2.1.0 --index-url https://download.pytorch.org/whl/cpu
+
+# ── Install Remaining Dependencies ───────────────────────────────
+COPY requirements.txt /app/
+RUN pip install --no-cache-dir -r requirements.txt
 
 # ── Application Code ─────────────────────────────────────────────
 COPY . /app/
@@ -34,5 +37,5 @@ EXPOSE 5000
 
 # ── Production Server ────────────────────────────────────────────
 # 1 eventlet worker required for Flask-SocketIO
-# --timeout 120: allows time for model to load on cold start
+# --timeout 120: allows cold-start time for model to load on first request
 CMD ["gunicorn", "--worker-class", "eventlet", "-w", "1", "--timeout", "120", "--bind", "0.0.0.0:5000", "app:app"]

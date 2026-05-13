@@ -1,4 +1,5 @@
 import cv2
+import time
 import torch
 import numpy as np
 import mediapipe as mp
@@ -392,18 +393,21 @@ def stop_surveillance():
 
 
 def stream_frames(get_frame_fn):
-    import time
     while True:
         with frame_lock:
             frame = get_frame_fn()
         if frame is None:
-            time.sleep(0.1)
+            time.sleep(0.05)
             continue
-        ret, buffer = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 85])
+        ret, buffer = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 75])
         if not ret:
+            time.sleep(0.04)
             continue
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
+        # Cap stream at ~25fps AND yield CPU back to eventlet so
+        # socket.io heartbeat can run (prevents socket going red)
+        time.sleep(0.04)
 
 # ── NEW NAVIGATION ROUTES ───────────────────────────────────
 
