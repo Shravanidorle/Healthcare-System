@@ -38,4 +38,4 @@ EXPOSE 5000
 # ── Production Server ────────────────────────────────────────────
 # 1 eventlet worker required for Flask-SocketIO
 # --timeout 120: allows cold-start time for model to load on first request
-CMD ["gunicorn", "--worker-class", "eventlet", "-w", "1", "--timeout", "120", "--bind", "0.0.0.0:5000", "app:app"]
+CMD gunicorn --worker-class eventlet -w 1 --timeout 120 --bind 0.0.0.0:${PORT:-5000} app:app
