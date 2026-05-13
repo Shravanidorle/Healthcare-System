@@ -1,41 +1,38 @@
-# Base Image — bullseye is more stable for CV/ML than slim default
+# ── Base Image ───────────────────────────────────────────────────
+# bullseye is more stable than slim for CV/ML workloads
 FROM python:3.9-slim-bullseye
 
-# Optimization: Prevent .pyc files and unbuffer Python output
+# ── Python Optimizations ─────────────────────────────────────────
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Prevents OpenCV from trying to open a display (headless server)
-ENV OPENCV_IO_ENABLE_OPENEXR=0
-ENV DISPLAY=:99
-
-# Set the working directory
 WORKDIR /app
 
-# System Dependencies
+# ── System Dependencies ──────────────────────────────────────────
+# Only what opencv-python-headless + mediapipe actually need at runtime.
+# NO display/X11/GStreamer needed — we use the headless OpenCV build.
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libgl1 \
     libglib2.0-0 \
     libsm6 \
     libxext6 \
-    libxrender-dev \
+    libxrender1 \
     libgomp1 \
-    libgstreamer1.0-0 \
-    libgstreamer-plugins-base1.0-0 \
-    libavcodec-extra \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
+# ── Python Dependencies ──────────────────────────────────────────
+# Copy requirements first (Docker cache layer — only rebuilds if requirements change)
 COPY requirements.txt /app/
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt && \
-    pip install --no-cache-dir gunicorn eventlet
+    pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application
+# ── Application Code ─────────────────────────────────────────────
 COPY . /app/
 
-# Expose the port
+# ── Port ─────────────────────────────────────────────────────────
 EXPOSE 5000
 
-# Production Server
+# ── Production Server ────────────────────────────────────────────
+# 1 eventlet worker required for Flask-SocketIO
+# --timeout 120: allows time for model to load on cold start
 CMD ["gunicorn", "--worker-class", "eventlet", "-w", "1", "--timeout", "120", "--bind", "0.0.0.0:5000", "app:app"]
