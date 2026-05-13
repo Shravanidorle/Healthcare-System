@@ -168,25 +168,34 @@ def camera_thread():
         print("[INFO] Switching to Simulation Mode...")
         simulation_mode = True
         try:
-            cap = cv2.VideoCapture('static/video/sample_fall.mp4')
+            cap = cv2.VideoCapture('static/videos/sample_fall.mp4')
         except Exception as e:
             print(f"[ERROR] Exception opening sample video: {e}")
             cap = None
 
     if cap is None or not cap.isOpened():
-        print("[ERROR] No Input Source")
-        blank = np.zeros((480, 640, 3), dtype=np.uint8)
-        text = "System Error: No Input Source"
+        import time
+        print("[WARNING] SIMULATION: Video File Missing")
+        blank = np.full((480, 640, 3), 50, dtype=np.uint8)
+        text = "SIMULATION: Video File Missing"
         # Center text roughly
         text_size = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 1.0, 2)[0]
         text_x = (640 - text_size[0]) // 2
         text_y = (480 + text_size[1]) // 2
         cv2.putText(blank, text, (text_x, text_y),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 255), 2)
-        with frame_lock:
-            latest_display_frame  = blank.copy()
-            latest_skeleton_frame = blank.copy()
-        return
+                    cv2.FONT_HERSHEY_SIMPLEX, 1.0, (200, 200, 200), 2)
+        
+        while True:
+            if stop_flag:
+                with frame_lock:
+                    latest_display_frame  = None
+                    latest_skeleton_frame = None
+                stop_flag = False
+                return
+            with frame_lock:
+                latest_display_frame  = blank.copy()
+                latest_skeleton_frame = blank.copy()
+            time.sleep(0.033)
 
     frame_buffer = collections.deque(maxlen=WINDOW_SIZE)
     fall_counter = 0
@@ -541,8 +550,27 @@ def on_disconnect():
     print("[INFO] Browser client disconnected")
 
 if __name__ == '__main__':
+    # 1. Dynamically get the port from the environment (Render's requirement)
+    # Default to 5000 if running locally
+    port = int(os.environ.get('PORT', 5000))
+
+    # 2. Check if we are in production (Render) to disable debug mode
+    is_render = os.environ.get('RENDER', 'False') == 'True'
+
     print("\n" + "=" * 50)
-    print("Fall Detection System Starting...")
-    print("Open your browser at: http://127.0.0.1:5000")
+    if is_render:
+        print("PRODUCTION MODE: Fall Detection System Starting on Render...")
+    else:
+        print("DEVELOPMENT MODE: Fall Detection System Starting...")
+        print(f"Open your browser at: http://127.0.0.1:{port}")
     print("=" * 50 + "\n")
-socketio.run(app, debug=True, use_reloader=False, host='0.0.0.0', port=5000)
+
+    # 3. Run the app with the correct port and settings
+    # We turn off debug and reloader for production to save resources
+    socketio.run(
+        app, 
+        debug=not is_render, 
+        use_reloader=not is_render, 
+        host='0.0.0.0', 
+        port=port
+    )
