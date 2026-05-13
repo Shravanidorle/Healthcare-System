@@ -28,4 +28,5 @@ COPY . /app/
 EXPOSE 5000
 
 # Production Server Configuration: Run Gunicorn with Eventlet worker class
-CMD ["gunicorn", "--worker-class", "eventlet", "-w", "1", "app:app", "--bind", "0.0.0.0:5000"]
+CMD ["gunicorn", "--worker-class", "eventlet", "-w", "1", "--timeout", "120", "app:app", "--bind", "0.0.0.0:5000"]
+

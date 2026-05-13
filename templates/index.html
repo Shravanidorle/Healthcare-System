@@ -16,9 +16,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}?v=4">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}?v=4">
 
-    <!-- Third-party libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" defer></script>
+    <!-- Third-party libraries (NO defer — these must be available before body scripts execute) -->
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
 
 <body>
@@ -341,8 +341,8 @@
                 <p>
                     Collects <code>30 frames</code> into a sliding window, extracts pose landmarks
                     via MediaPipe, runs a <code>CNN+LSTM</code> hybrid model.<br><br>
-                    Alert fires when confidence exceeds <code>75%</code> for
-                    <code>5 consecutive</code> windows.<br><br>
+                    Alert fires when confidence exceeds <code>85%</code> for
+                    <code>8 consecutive</code> frames.<br><br>
                     Visit <code>/status</code> to confirm model load.
                 </p>
             </div>

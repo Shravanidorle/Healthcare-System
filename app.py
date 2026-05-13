@@ -93,7 +93,7 @@ def init_db():
     ''')
     con.commit()
     con.close()
-    print(f"[DB] SQLite database ready → {DB_PATH}")
+    print(f"[DB] SQLite database ready => {DB_PATH}")
 
 init_db()
 
@@ -341,6 +341,9 @@ def camera_thread():
         with frame_lock:
             latest_display_frame  = display.copy()
             latest_skeleton_frame = skeleton.copy()
+
+        import time
+        time.sleep(0.033)
 
     if cap.isOpened():
         cap.release()

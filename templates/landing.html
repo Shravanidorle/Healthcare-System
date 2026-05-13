@@ -31,9 +31,8 @@
 
         /* Sticky Section Stacking Effect */
         .sticky-section {
-            position: sticky;
-            top: 0;
-            height: 100vh;
+            position: relative;
+            min-height: calc(100vh / 0.85);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -42,6 +41,7 @@
             background: var(--bg);
             border-top: 1px solid var(--border);
             z-index: 10;
+            overflow: hidden; /* prevents inner content bleeding out */
         }
         
         .sticky-section:nth-child(2) { z-index: 11; }

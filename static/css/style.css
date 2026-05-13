@@ -7,7 +7,7 @@
     align-items: center;
     justify-content: flex-start !important;
     flex-direction: row !important; /* Force row layout over sticky-section */
-    min-height: 100vh;
+    min-height: calc(100vh / 0.85);
     background: radial-gradient(circle at center, var(--surface2) 0%, var(--bg) 100%);
     padding: 80px 50px 20px 50px; /* Padding for fixed nav */
     box-sizing: border-box;
@@ -360,3 +360,26 @@ section.sticky-section {
     box-shadow: 0 0 10px var(--green);
     transform: scale(1.3);
 }
+
+/* ── UI Layout Regression Fixes ── */
+
+/* 1. Prevent Section Overlap */
+#departments, #surveillance, #support, #stories, #events, #blogs {
+    padding-top: 100px;
+    position: relative;
+}
+
+/* 2. Title Alignment Repair */
+.section-title {
+    text-align: center;
+    padding-bottom: 40px;
+}
+
+/* 3. Z-Index Ordering */
+#hero { z-index: 900; position: relative; }
+#departments { z-index: 800; }
+#surveillance { z-index: 700; }
+#support { z-index: 600; }
+#stories { z-index: 500; }
+#events { z-index: 400; }
+#blogs { z-index: 300; }

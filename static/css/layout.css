@@ -5,7 +5,7 @@
 body {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    min-height: calc(100vh / 0.85);
     margin: 0;
 }
 
@@ -20,7 +20,7 @@ header {
   justify-content: space-between;
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
 }
 
 .header-left {

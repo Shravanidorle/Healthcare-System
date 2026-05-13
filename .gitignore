@@ -5,3 +5,5 @@ __pycache__/
 .DS_Store
 *.key
 fall_logs.key
+hospital.db
+*.csv
